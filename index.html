@@ -1214,29 +1214,26 @@
 
     #topbar {
       padding:
-        calc(6px + var(--safe-top))
+        calc(4px + var(--safe-top))
         calc(8px + var(--safe-right))
-        6px
+        4px
         calc(8px + var(--safe-left));
     }
 
     #topbar-row1 {
       display: grid;
-      grid-template-columns: minmax(82px, 1fr) auto minmax(56px, 1fr);
+      grid-template-columns: minmax(72px, 0.95fr) minmax(72px, 0.95fr) minmax(108px, 1.15fr) auto;
       grid-template-areas:
-        "menu score sound"
-        "reset score sound"
-        "difficulty difficulty difficulty"
-        "boardtheme boardtheme boardtheme";
-      gap: 6px 8px;
+        "menu reset score sound"
+        "difficulty difficulty boardtheme boardtheme";
+      gap: 5px 6px;
       align-items: center;
     }
 
     #topbar-row1.mobile-no-difficulty {
       grid-template-areas:
-        "menu score sound"
-        "reset score sound"
-        "boardtheme boardtheme boardtheme";
+        "menu reset score sound"
+        "boardtheme boardtheme boardtheme boardtheme";
     }
 
     #menu-btn,
@@ -1244,50 +1241,51 @@
     #difficulty-btn,
     #board-theme-btn,
     #sound-btn {
-      height: 36px;
-      min-height: 36px;
+      height: 32px;
+      min-height: 32px;
+      border-radius: 9px;
     }
 
     #menu-btn,
     #reset-btn {
       width: 100%;
       justify-self: stretch;
-      padding: 0 8px;
-      font-size: 12px;
+      padding: 0 7px;
+      font-size: 11px;
     }
 
     #sound-btn {
-      width: 44px;
-      min-width: 44px;
+      width: 40px;
+      min-width: 40px;
       justify-self: end;
-      font-size: 17px;
+      font-size: 15px;
     }
 
     #score {
-      font-size: clamp(21px, 7.4vw, 30px);
-      letter-spacing: 1px;
-      justify-self: center;
+      font-size: clamp(18px, 6.6vw, 25px);
+      letter-spacing: 0.8px;
+      justify-self: end;
       align-self: center;
-      padding: 0 2px;
+      padding: 0 1px;
     }
 
-    #score .dash { margin: 0 5px; }
+    #score .dash { margin: 0 4px; }
 
     #difficulty-btn {
       margin-left: 0;
       width: 100%;
       min-width: 0;
-      font-size: 13px;
-      padding-left: 10px;
-      padding-right: 26px;
+      font-size: 12px;
+      padding-left: 9px;
+      padding-right: 24px;
     }
 
     #board-theme-btn {
       width: 100%;
       min-width: 0;
-      font-size: 13px;
-      padding-left: 10px;
-      padding-right: 26px;
+      font-size: 12px;
+      padding-left: 9px;
+      padding-right: 24px;
     }
 
     /* Mobile declutter: keep share action in async overlay/buttons instead of topbar. */
@@ -1313,11 +1311,11 @@
 
   @media (max-width: 399px) {
     #topbar { gap: 4px; }
-    #menu-btn, #reset-btn { font-size: 11px; }
-    #difficulty-btn, #board-theme-btn { font-size: 12px; padding-right: 24px; }
-    #sound-btn { width: 40px; min-width: 40px; font-size: 16px; }
-    #score { font-size: clamp(19px, 7vw, 26px); }
-    #score .dash { margin: 0 4px; }
+    #menu-btn, #reset-btn { font-size: 10px; }
+    #difficulty-btn, #board-theme-btn { font-size: 11px; padding-right: 22px; }
+    #sound-btn { width: 38px; min-width: 38px; font-size: 14px; }
+    #score { font-size: clamp(16px, 6.4vw, 22px); }
+    #score .dash { margin: 0 3px; }
   }
 </style>
 </head>
