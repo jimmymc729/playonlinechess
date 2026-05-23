@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Chess king icon">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7e2ba"/>
+      <stop offset="100%" stop-color="#7eaad4"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="#0b1d33"/>
+  <path d="M32 10h4v6h6v4h-6v8l8 8v6H20v-6l8-8v-8h-6v-4h6zM18 48h28v6H18z" fill="url(#g)"/>
+</svg>
