@@ -1041,6 +1041,19 @@
     text-align: left;
   }
 
+  .mode-close-btn {
+    border-radius: 12px;
+    border: 2px solid #3f668e;
+    background: rgba(12, 30, 52, 0.92);
+    color: #d7e8fb;
+    padding: 12px 14px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    font-size: clamp(14px, 3.5vw, 17px);
+    cursor: pointer;
+    text-align: center;
+  }
+
   .mode-btn.active {
     border-color: #7effd1;
     box-shadow: 0 0 0 2px rgba(126, 255, 209, 0.28) inset;
@@ -1340,12 +1353,12 @@
       <option value="MASTER">CPU: HARD</option>
     </select>
     <select id="board-theme-btn" aria-label="Board theme" title="Board theme">
-      <option value="CLASSIC" selected>BOARD: IVORY</option>
+      <option value="CLASSIC">BOARD: IVORY</option>
       <option value="FOREST">BOARD: MOSS</option>
       <option value="OCEAN">BOARD: TIDAL</option>
       <option value="WALNUT">BOARD: AMBER</option>
       <option value="SLATE">BOARD: SLATE</option>
-      <option value="AURORA">BOARD: AURORA</option>
+      <option value="AURORA" selected>BOARD: AURORA</option>
     </select>
     <button id="share-btn" title="Share challenge link">SHARE</button>
     <button id="sound-btn" title="Toggle sound">🔊</button>
@@ -1388,6 +1401,7 @@
         <button class="mode-btn" id="mode-cpu">SOLO VS CPU<span class="mode-sub">Play instantly vs computer</span></button>
         <button class="mode-btn" id="mode-pass">PASS & PLAY<span class="mode-sub">Two players, one device</span></button>
         <button class="mode-btn" id="mode-link">CHALLENGE BY LINK<span class="mode-sub">Async turns by text link</span></button>
+        <button class="mode-close-btn" id="mode-close-btn">BACK TO GAME</button>
       </div>
       <div id="active-challenges" class="hidden">
         <h3>Active Link Challenges</h3>
@@ -1765,6 +1779,12 @@ function showOverlay(id) {
   const el = document.getElementById(id);
   if (el) el.classList.remove('hidden');
   setControlVisibility();
+}
+
+function closeModeSelect() {
+  hideAllOverlays();
+  renderBoard();
+  refreshCpuTauntLoop();
 }
 
 function createInitialBoard() {
@@ -2550,7 +2570,7 @@ function loadPreferredBoardTheme() {
     const v = localStorage.getItem(BOARD_THEME_STORAGE_KEY);
     if (v && BOARD_THEMES[v]) return v;
   } catch {}
-  return 'CLASSIC';
+  return 'AURORA';
 }
 
 function applyBoardTheme(themeKey, persist = true) {
@@ -4327,9 +4347,17 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 document.getElementById('menu-btn').addEventListener('click', () => {
   sfxClick();
   const visible = !document.getElementById('mode-select').classList.contains('hidden');
-  if (visible) return;
+  if (visible) {
+    closeModeSelect();
+    return;
+  }
   showOverlay('mode-select');
   renderActiveChallengesMenu();
+});
+
+document.getElementById('mode-close-btn').addEventListener('click', () => {
+  sfxClick();
+  closeModeSelect();
 });
 
 document.getElementById('next-round-btn').addEventListener('click', () => { sfxClick(); nextRound(); });
@@ -4373,6 +4401,16 @@ document.getElementById('async-close-btn').addEventListener('click', () => {
 document.getElementById('async-turn-overlay').addEventListener('click', (e) => {
   if (e.target.id !== 'async-turn-overlay') return;
   hideAsyncTurnOverlay();
+});
+
+document.getElementById('mode-select').addEventListener('click', (e) => {
+  if (e.target.id !== 'mode-select') return;
+  closeModeSelect();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (!document.getElementById('mode-select').classList.contains('hidden')) closeModeSelect();
 });
 
 document.getElementById('announce').addEventListener('click', hideAnnouncement);
