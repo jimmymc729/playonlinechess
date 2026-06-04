@@ -260,6 +260,7 @@
     overflow-x: hidden;
     scrollbar-width: thin;
     padding-right: 2px;
+    padding-bottom: 68px;
   }
 
   .move-chip {
@@ -281,12 +282,54 @@
     font-weight: 900;
   }
 
+  .move-chip .move-notation {
+    position: relative;
+    min-width: 0;
+    cursor: help;
+    text-decoration: underline dotted rgba(143, 178, 218, 0.32);
+    text-underline-offset: 2px;
+  }
+
+  .move-chip .move-notation:focus-visible {
+    outline: 2px solid rgba(111, 198, 182, 0.72);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   .move-chip .w { color: #f5e9c8; }
   .move-chip .b { color: #bcd3ee; text-align: right; }
 
   .move-chip.latest {
     border-color: #6fc6b6;
     box-shadow: 0 0 0 1px rgba(111, 198, 182, 0.32) inset;
+  }
+
+  #move-explainer {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    z-index: 2;
+    border-radius: 10px;
+    border: 1px solid rgba(111, 198, 182, 0.72);
+    background: rgba(8, 27, 48, 0.96);
+    color: #e6f7f3;
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: 700;
+    padding: 8px 10px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+    pointer-events: none;
+  }
+
+  #move-explainer.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 
   .moves-empty {
@@ -1998,6 +2041,7 @@
   <div id="game-insights" aria-label="Opening and move history">
     <div id="opening-name">Opening: Ready</div>
     <div id="moves-tape"></div>
+    <div id="move-explainer" aria-hidden="true"></div>
   </div>
 
   <div id="board-wrap">
@@ -2273,6 +2317,7 @@ let cpuPlayerPattern = {
 let insightsCacheKey = '';
 let insightsCacheOpening = 'Ready';
 let insightsCacheNotes = [];
+let insightsHoverBound = false;
 
 const PIECE_SVGS = {
   wk: './assets/pieces/cburnett/wk.svg',
@@ -3029,6 +3074,70 @@ function detectOpeningNameFromHistory() {
   return moveHistory.length < 2 ? 'Developing...' : 'Offbook Line';
 }
 
+function formatSideName(side) {
+  return side === WHITE ? 'White' : 'Black';
+}
+
+function formatPieceName(type) {
+  return ({
+    p: 'pawn',
+    n: 'knight',
+    b: 'bishop',
+    r: 'rook',
+    q: 'queen',
+    k: 'king'
+  })[type] || 'piece';
+}
+
+function formatPromotionName(code) {
+  return formatPieceName(String(code || '').toLowerCase());
+}
+
+function formatCapturedPieceText(capturedPiece) {
+  const type = pieceType(capturedPiece);
+  if (!type) return 'a piece';
+  const name = formatPieceName(type);
+  const article = /^[aeiou]/.test(name) ? 'an' : 'a';
+  return `${article} ${name}`;
+}
+
+function toMoveExplanation(move, piece, capturedPiece, side, status = {}) {
+  if (!move || !piece) return '';
+  const sideName = formatSideName(side);
+  const dst = encodeSquare(move.toR, move.toC);
+  const type = pieceType(piece);
+  const capture = !!capturedPiece || !!move.isEnPassant;
+  let text = '';
+
+  if (move.isCastle === 'K') {
+    text = `${sideName} castles kingside.`;
+  } else if (move.isCastle === 'Q') {
+    text = `${sideName} castles queenside.`;
+  } else if (type === 'p') {
+    if (capture) {
+      const captureText = capturedPiece ? `captures ${formatCapturedPieceText(capturedPiece)}` : 'captures';
+      text = `${sideName} pawn from the ${FILES[move.fromC]}-file ${captureText} on ${dst}.`;
+    } else {
+      text = `${sideName} pawn moves to ${dst}.`;
+    }
+    if (move.promotion) {
+      text = text.replace(/\.$/, '') + ` and promotes to a ${formatPromotionName(move.promotion)}.`;
+    }
+  } else {
+    const pieceName = formatPieceName(type);
+    if (capture) {
+      const captureText = capturedPiece ? `captures ${formatCapturedPieceText(capturedPiece)}` : 'captures';
+      text = `${sideName} ${pieceName} ${captureText} on ${dst}.`;
+    } else {
+      text = `${sideName} ${pieceName} moves to ${dst}.`;
+    }
+  }
+
+  if (status.isMate) return `${text} Checkmate.`;
+  if (status.givesCheck) return `${text} Check.`;
+  return text;
+}
+
 function toCompactNotation(move, piece, capturedPiece) {
   if (!move || !piece) return '';
   if (move.isCastle === 'K') return 'O-O';
@@ -3069,18 +3178,71 @@ function buildMoveNotationHistory() {
     const captured = exact.isEnPassant
       ? state.board[state.turn === WHITE ? exact.toR + 1 : exact.toR - 1][exact.toC]
       : state.board[exact.toR][exact.toC];
+    const moveSide = state.turn;
     let note = toCompactNotation(exact, moving, captured);
     const next = applyMoveToState(state, exact);
     const givesCheck = isKingInCheck(next, next.turn);
+    const replies = givesCheck ? generateLegalMoves(next, next.turn) : [];
+    const isMate = givesCheck && !replies.length;
     if (givesCheck) {
-      const replies = generateLegalMoves(next, next.turn);
-      note += replies.length ? '+' : '#';
+      note += isMate ? '#' : '+';
     }
-    out.push(note);
+    out.push({
+      notation: note,
+      explanation: toMoveExplanation(exact, moving, captured, moveSide, { givesCheck, isMate })
+    });
     state = next;
   }
 
   return out;
+}
+
+function setMoveExplainer(text) {
+  const explainer = document.getElementById('move-explainer');
+  if (!explainer) return;
+  if (!text) {
+    explainer.textContent = '';
+    explainer.classList.remove('show');
+    explainer.setAttribute('aria-hidden', 'true');
+    return;
+  }
+  explainer.textContent = text;
+  explainer.classList.add('show');
+  explainer.setAttribute('aria-hidden', 'false');
+}
+
+function bindInsightsHover(tape) {
+  if (insightsHoverBound || !tape) return;
+  insightsHoverBound = true;
+  const getTarget = node => node && node.closest ? node.closest('.move-notation[data-explain]') : null;
+
+  tape.addEventListener('mouseover', e => {
+    const target = getTarget(e.target);
+    if (!target || !tape.contains(target)) return;
+    setMoveExplainer(target.dataset.explain || '');
+  });
+
+  tape.addEventListener('mouseout', e => {
+    const target = getTarget(e.target);
+    if (!target || !tape.contains(target)) return;
+    const related = getTarget(e.relatedTarget);
+    if (related && tape.contains(related)) return;
+    setMoveExplainer('');
+  });
+
+  tape.addEventListener('focusin', e => {
+    const target = getTarget(e.target);
+    if (!target || !tape.contains(target)) return;
+    setMoveExplainer(target.dataset.explain || '');
+  });
+
+  tape.addEventListener('focusout', e => {
+    const related = getTarget(e.relatedTarget);
+    if (related && tape.contains(related)) return;
+    setMoveExplainer('');
+  });
+
+  tape.addEventListener('mouseleave', () => setMoveExplainer(''));
 }
 
 function renderInsights() {
@@ -3088,9 +3250,11 @@ function renderInsights() {
   const tape = document.getElementById('moves-tape');
   const container = document.getElementById('game-insights');
   if (!openingEl || !tape || !container) return;
+  bindInsightsHover(tape);
 
   if (!onePlayer || window.innerWidth <= 700) {
     container.classList.add('hidden');
+    setMoveExplainer('');
     return;
   }
 
@@ -3106,6 +3270,7 @@ function renderInsights() {
   openingEl.textContent = `Opening: ${insightsCacheOpening}`;
   const notes = insightsCacheNotes;
   tape.innerHTML = '';
+  setMoveExplainer('');
 
   if (!notes.length) {
     const empty = document.createElement('div');
@@ -3119,9 +3284,37 @@ function renderInsights() {
     const chip = document.createElement('div');
     chip.className = 'move-chip';
     const moveNo = Math.floor(i / 2) + 1;
-    const white = notes[i] || '';
-    const black = notes[i + 1] || '';
-    chip.innerHTML = `<span class="n">${moveNo}.</span><span class="w">${white}</span>${black ? `<span class="b">${black}</span>` : ''}`;
+    const white = notes[i] || null;
+    const black = notes[i + 1] || null;
+    const num = document.createElement('span');
+    num.className = 'n';
+    num.textContent = `${moveNo}.`;
+    chip.appendChild(num);
+
+    const whiteEl = document.createElement('span');
+    whiteEl.className = 'move-notation w';
+    whiteEl.textContent = white ? white.notation : '';
+    if (white && white.explanation) {
+      whiteEl.dataset.explain = white.explanation;
+      whiteEl.tabIndex = 0;
+      whiteEl.title = white.explanation;
+      whiteEl.setAttribute('aria-label', `${white.notation}. ${white.explanation}`);
+    }
+    chip.appendChild(whiteEl);
+
+    if (black) {
+      const blackEl = document.createElement('span');
+      blackEl.className = 'move-notation b';
+      blackEl.textContent = black.notation;
+      if (black.explanation) {
+        blackEl.dataset.explain = black.explanation;
+        blackEl.tabIndex = 0;
+        blackEl.title = black.explanation;
+        blackEl.setAttribute('aria-label', `${black.notation}. ${black.explanation}`);
+      }
+      chip.appendChild(blackEl);
+    }
+
     if (i + 1 >= notes.length - 1) chip.classList.add('latest');
     tape.appendChild(chip);
   }
