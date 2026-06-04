@@ -30,6 +30,40 @@
     --board-frame-glow: rgba(0, 100, 200, 0.28);
     --board-light: #e7d6b1;
     --board-dark: #956839;
+    --board-label-light: rgba(88, 58, 24, 0.72);
+    --board-label-dark: rgba(244, 229, 194, 0.82);
+    --board-piece-black-base-filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+    --board-piece-black-filter: var(--board-piece-black-base-filter);
+    --board-effect-light-bg: var(--board-light);
+    --board-effect-dark-bg: var(--board-dark);
+    --board-effect-label-light: var(--board-label-light);
+    --board-effect-label-dark: var(--board-label-dark);
+    --board-effect-overlay: none;
+    --board-effect-overlay-opacity: 0;
+    --board-effect-overlay-size: 100% 100%;
+    --board-effect-overlay-filter: none;
+    --board-effect-overlay-animation: none;
+    --board-effect-overlay-2: none;
+    --board-effect-overlay-2-opacity: 0;
+    --board-effect-overlay-2-size: 100% 100%;
+    --board-effect-overlay-2-filter: none;
+    --board-effect-overlay-2-animation: none;
+    --board-effect-overlay-2-blend: normal;
+    --board-fx-light-square: var(--board-light);
+    --board-fx-dark-square: var(--board-dark);
+    --board-fx-label-light: var(--board-label-light);
+    --board-fx-label-dark: var(--board-label-dark);
+    --board-fx-piece-black-filter: var(--board-piece-black-base-filter);
+    --board-fx-drift-duration: 34s;
+    --board-fx-accent-1: rgba(108, 255, 173, 0.7);
+    --board-fx-accent-2: rgba(102, 156, 255, 0.66);
+    --board-fx-accent-3: rgba(192, 108, 255, 0.64);
+    --board-fx-accent-4: rgba(255, 118, 152, 0.5);
+    --board-fx-base-1: #08121e;
+    --board-fx-base-2: #0d2332;
+    --board-fx-base-3: #153249;
+    --board-fx-base-4: #112739;
+    --board-fx-overlay-filter: saturate(1.06) brightness(1.03);
   }
 
   * {
@@ -132,7 +166,7 @@
   }
 
   #difficulty-btn { margin-left: auto; }
-  #board-theme-btn { min-width: 108px; }
+  #board-theme-btn { min-width: 156px; }
 
   #sound-btn {
     width: 40px;
@@ -329,6 +363,21 @@
   .panel:not(.dim) .your-turn { opacity: 1; }
 
   .cpu-avatar {
+    --cpu-face-radius: 4px;
+    --cpu-face-clip: inset(0 round 4px);
+    --cpu-shell-border: #35557f;
+    --cpu-shell-bg: #081224;
+    --cpu-grid: rgba(115, 255, 208, 0.04);
+    --cpu-inset-glow: rgba(115, 255, 208, 0.12);
+    --cpu-outer-glow: rgba(0, 140, 255, 0.14);
+    --cpu-accent: #73ffd0;
+    --cpu-accent-glow: rgba(115, 255, 208, 0.5);
+    --cpu-pupil: #0b2a22;
+    --cpu-eye-radius: 1px;
+    --cpu-mouth-radius: 1px;
+    --cpu-chat-border: rgba(115, 255, 208, 0.32);
+    --cpu-chat-bg: rgba(10, 28, 52, 0.94);
+    --cpu-chat-text: #9bf9d6;
     position: absolute;
     left: 10px;
     top: 50%;
@@ -363,13 +412,13 @@
   .cpu-face {
     width: clamp(64px, 14vw, 110px);
     height: clamp(64px, 14vw, 110px);
-    border-radius: 4px;
-    border: 2px solid #35557f;
+    border-radius: var(--cpu-face-radius);
+    border: 2px solid var(--cpu-shell-border);
     background:
-      linear-gradient(90deg, rgba(115, 255, 208, 0.04) 1px, transparent 1px) 0 0 / 8px 8px,
-      linear-gradient(rgba(115, 255, 208, 0.04) 1px, transparent 1px) 0 0 / 8px 8px,
-      #081224;
-    box-shadow: inset 0 0 0 1px rgba(115, 255, 208, 0.12), 0 0 10px rgba(0, 140, 255, 0.14);
+      linear-gradient(90deg, var(--cpu-grid) 1px, transparent 1px) 0 0 / 8px 8px,
+      linear-gradient(var(--cpu-grid) 1px, transparent 1px) 0 0 / 8px 8px,
+      var(--cpu-shell-bg);
+    box-shadow: inset 0 0 0 1px var(--cpu-inset-glow), 0 0 10px var(--cpu-outer-glow);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -377,13 +426,39 @@
     gap: 7px;
     flex: 0 0 auto;
     image-rendering: pixelated;
+    clip-path: var(--cpu-face-clip);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cpu-face::before,
+  .cpu-face::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .cpu-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: max-content;
+    z-index: 1;
   }
 
   .panel.cpu-focus .cpu-face {
     width: clamp(74px, 15vw, 116px);
     height: clamp(74px, 15vw, 116px);
     border-width: 3px;
-    box-shadow: inset 0 0 0 1px rgba(115, 255, 208, 0.18), 0 0 16px rgba(0, 170, 255, 0.22);
+    box-shadow: inset 0 0 0 1px var(--cpu-inset-glow), 0 0 16px var(--cpu-outer-glow);
   }
 
   .cpu-face.hidden {
@@ -394,11 +469,11 @@
     min-height: 2.3em;
     max-width: min(94%, 190px);
     padding: 5px 8px;
-    border: 2px solid rgba(115, 255, 208, 0.32);
+    border: 2px solid var(--cpu-chat-border);
     border-radius: 10px;
-    background: rgba(10, 28, 52, 0.94);
+    background: var(--cpu-chat-bg);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
-    color: #9bf9d6;
+    color: var(--cpu-chat-text);
     text-align: center;
     font-size: clamp(9px, 1.7vw, 12px);
     font-weight: 800;
@@ -470,9 +545,9 @@
     bottom: -8px;
     width: 12px;
     height: 12px;
-    background: rgba(18, 40, 58, 0.94);
-    border-right: 2px solid rgba(115, 255, 208, 0.32);
-    border-bottom: 2px solid rgba(115, 255, 208, 0.32);
+    background: var(--cpu-chat-bg);
+    border-right: 2px solid var(--cpu-chat-border);
+    border-bottom: 2px solid var(--cpu-chat-border);
     transform: translateX(-50%) rotate(45deg);
   }
 
@@ -499,13 +574,14 @@
     display: flex;
     gap: 12px;
     margin-bottom: -3px;
+    transform-origin: center center;
   }
 
   .cpu-brow {
     width: 12px;
     height: 4px;
-    background: #73ffd0;
-    box-shadow: 0 0 6px rgba(115, 255, 208, 0.45);
+    background: var(--cpu-accent);
+    box-shadow: 0 0 6px var(--cpu-accent-glow);
     transform-origin: center center;
     transition: transform 180ms ease, opacity 180ms ease;
   }
@@ -515,15 +591,17 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
+    transform-origin: center center;
   }
 
   .cpu-eye {
     width: 11px;
     height: 11px;
-    background: #73ffd0;
-    box-shadow: 0 0 6px rgba(115, 255, 208, 0.55);
+    background: var(--cpu-accent);
+    box-shadow: 0 0 6px var(--cpu-accent-glow);
     position: relative;
     overflow: hidden;
+    border-radius: var(--cpu-eye-radius);
     transition: transform 160ms ease, opacity 160ms ease;
   }
 
@@ -534,37 +612,286 @@
     height: 4px;
     left: 3px;
     top: 3px;
-    background: #0b2a22;
+    background: var(--cpu-pupil);
     box-shadow: 0 0 4px rgba(0,0,0,0.35);
     animation: cpu-look 2.8s infinite steps(1, end);
+    transform-origin: center center;
   }
 
   .cpu-mouth {
     width: 28px;
     height: 7px;
-    background: #73ffd0;
-    box-shadow: 0 0 6px rgba(115, 255, 208, 0.5);
+    background: var(--cpu-accent);
+    box-shadow: 0 0 6px var(--cpu-accent-glow);
+    border-radius: var(--cpu-mouth-radius);
+    transform-origin: center center;
+  }
+
+  .cpu-avatar[data-difficulty="ROOKIE"] {
+    --cpu-face-radius: 4px;
+    --cpu-face-clip: inset(0 round 4px);
+    --cpu-shell-border: #35557f;
+    --cpu-shell-bg: #081224;
+    --cpu-grid: rgba(115, 255, 208, 0.04);
+    --cpu-inset-glow: rgba(115, 255, 208, 0.12);
+    --cpu-outer-glow: rgba(0, 140, 255, 0.14);
+    --cpu-accent: #c5ffe1;
+    --cpu-accent-glow: rgba(197, 255, 225, 0.54);
+    --cpu-pupil: #27554a;
+    --cpu-eye-radius: 4px;
+    --cpu-mouth-radius: 8px;
+    --cpu-chat-border: rgba(115, 255, 208, 0.32);
+    --cpu-chat-bg: rgba(10, 28, 52, 0.94);
+    --cpu-chat-text: #9bf9d6;
+  }
+
+  .cpu-avatar[data-difficulty="ROOKIE"] .cpu-brows {
+    gap: 10px;
+    margin-bottom: -1px;
+  }
+
+  .cpu-avatar[data-difficulty="ROOKIE"] .cpu-eye {
+    width: 13px;
+    height: 13px;
+  }
+
+  .cpu-avatar[data-difficulty="ROOKIE"] .cpu-eye::after {
+    width: 3px;
+    height: 3px;
+    left: 4px;
+    top: 4px;
+  }
+
+  .cpu-avatar[data-difficulty="ROOKIE"] .cpu-brow {
+    width: 10px;
+    height: 3px;
+    opacity: 0.8;
+  }
+
+  .cpu-avatar[data-difficulty="ROOKIE"] .cpu-mouth {
+    width: 30px;
+    height: 8px;
+    clip-path: polygon(4% 20%, 96% 20%, 84% 100%, 16% 100%);
+  }
+
+  .cpu-avatar[data-difficulty="PRO"] {
+    --cpu-face-radius: 4px;
+    --cpu-face-clip: inset(0 round 4px);
+    --cpu-shell-border: #35557f;
+    --cpu-shell-bg: #081224;
+    --cpu-grid: rgba(115, 255, 208, 0.04);
+    --cpu-inset-glow: rgba(115, 255, 208, 0.12);
+    --cpu-outer-glow: rgba(0, 140, 255, 0.14);
+    --cpu-accent: #73ffd0;
+    --cpu-accent-glow: rgba(115, 255, 208, 0.5);
+    --cpu-pupil: #0b2a22;
+    --cpu-eye-radius: 1px;
+    --cpu-mouth-radius: 1px;
+    --cpu-chat-border: rgba(115, 255, 208, 0.32);
+    --cpu-chat-bg: rgba(10, 28, 52, 0.94);
+    --cpu-chat-text: #9bf9d6;
+  }
+
+  .cpu-avatar[data-difficulty="MASTER"] {
+    --cpu-face-radius: 4px;
+    --cpu-face-clip: inset(0 round 4px);
+    --cpu-shell-border: #35557f;
+    --cpu-shell-bg: #081224;
+    --cpu-grid: rgba(115, 255, 208, 0.04);
+    --cpu-inset-glow: rgba(115, 255, 208, 0.12);
+    --cpu-outer-glow: rgba(0, 140, 255, 0.14);
+    --cpu-accent: #ffc08a;
+    --cpu-accent-glow: rgba(255, 168, 103, 0.56);
+    --cpu-pupil: #3a130b;
+    --cpu-eye-radius: 1px;
+    --cpu-mouth-radius: 0;
+    --cpu-chat-border: rgba(115, 255, 208, 0.32);
+    --cpu-chat-bg: rgba(10, 28, 52, 0.94);
+    --cpu-chat-text: #9bf9d6;
+  }
+
+  .cpu-avatar[data-difficulty="MASTER"] .cpu-brows {
+    gap: 10px;
+    margin-bottom: -4px;
+  }
+
+  .cpu-avatar[data-difficulty="MASTER"] .cpu-brow {
+    width: 14px;
+    height: 3px;
+    opacity: 0.95;
+  }
+
+  .cpu-avatar[data-difficulty="MASTER"] .cpu-eye {
+    width: 12px;
+    height: 7px;
+  }
+
+  .cpu-avatar[data-difficulty="MASTER"] .cpu-eye::after {
+    width: 3px;
+    height: 3px;
+    left: 5px;
+    top: 2px;
+  }
+
+  .cpu-avatar[data-difficulty="MASTER"] .cpu-mouth {
+    width: 24px;
+    height: 4px;
+    clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%);
   }
 
   .cpu-face[data-emotion="idle"] .cpu-eye { animation: cpu-blink 4s infinite; }
   .cpu-face[data-emotion="thinking"] { animation: cpuface-pulse 0.9s infinite ease-in-out; }
+  .cpu-face[data-emotion="thinking"]::before {
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 42%, var(--cpu-accent) 50%, rgba(255,255,255,0.06) 58%, rgba(255,255,255,0) 100%);
+    opacity: 0.5;
+    animation: cpu-scan-sweep 2.2s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+  .cpu-face[data-emotion="thinking"] .cpu-brows { animation: cpu-brows-think 1.2s ease-in-out infinite; }
+  .cpu-face[data-emotion="thinking"] .cpu-eye::after { animation: cpu-look-thinking 1.1s infinite steps(1, end); }
   .cpu-face[data-emotion="thinking"] .cpu-mouth { width: 12px; }
-  .cpu-face[data-emotion="happy"] .cpu-mouth { clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%); }
+  .cpu-face[data-emotion="happy"]::before {
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08), rgba(255,255,255,0) 62%);
+    opacity: 0.8;
+    animation: cpu-glow-bloom 2.8s ease-in-out infinite;
+  }
+  .cpu-face[data-emotion="happy"] .cpu-brows {
+    transform: translateY(-3px);
+  }
+  .cpu-face[data-emotion="happy"] .cpu-eye {
+    transform: scale(1.08);
+  }
+  .cpu-face[data-emotion="happy"] .cpu-mouth {
+    clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%);
+    animation: cpu-mouth-happy 1.6s ease-in-out infinite;
+  }
+  .cpu-face[data-emotion="sad"] .cpu-brow:first-child {
+    transform: translateY(1px) rotate(16deg);
+  }
+  .cpu-face[data-emotion="sad"] .cpu-brow:last-child {
+    transform: translateY(1px) rotate(-16deg);
+  }
+  .cpu-face[data-emotion="sad"] .cpu-eyes {
+    transform: translateY(1px);
+  }
   .cpu-face[data-emotion="sad"] .cpu-mouth { clip-path: polygon(16% 0, 84% 0, 100% 100%, 0 100%); }
-  .cpu-face[data-emotion="smug"] .cpu-brow:first-child { transform: translateY(-1px) rotate(-10deg); }
-  .cpu-face[data-emotion="smug"] .cpu-brow:last-child { transform: translateY(1px) rotate(8deg); }
+  .cpu-face[data-emotion="smug"]::before {
+    background: linear-gradient(135deg, rgba(255,255,255,0) 28%, rgba(255,255,255,0.09) 44%, rgba(255,255,255,0) 62%);
+    opacity: 0;
+    animation: cpu-sheen-smug 3.4s ease-in-out infinite;
+  }
+  .cpu-face[data-emotion="smug"] .cpu-brow:first-child { transform: translateY(-2px) rotate(-14deg); }
+  .cpu-face[data-emotion="smug"] .cpu-brow:last-child { transform: translateY(2px) rotate(10deg); }
+  .cpu-face[data-emotion="smug"] .cpu-eyes {
+    transform: skewX(-6deg) scaleY(0.92);
+  }
+  .cpu-face[data-emotion="smug"] .cpu-eye::after { animation: cpu-look-smug 3.2s infinite steps(1, end); }
   .cpu-face[data-emotion="smug"] .cpu-mouth { width: 32px; }
+  .cpu-face[data-emotion="focused"]::before {
+    background:
+      linear-gradient(var(--cpu-accent), var(--cpu-accent)) left top / 14px 2px no-repeat,
+      linear-gradient(var(--cpu-accent), var(--cpu-accent)) left top / 2px 14px no-repeat,
+      linear-gradient(var(--cpu-accent), var(--cpu-accent)) right top / 14px 2px no-repeat,
+      linear-gradient(var(--cpu-accent), var(--cpu-accent)) right top / 2px 14px no-repeat,
+      linear-gradient(var(--cpu-accent), var(--cpu-accent)) left bottom / 14px 2px no-repeat,
+      linear-gradient(var(--cpu-accent), var(--cpu-accent)) left bottom / 2px 14px no-repeat,
+      linear-gradient(var(--cpu-accent), var(--cpu-accent)) right bottom / 14px 2px no-repeat,
+      linear-gradient(var(--cpu-accent), var(--cpu-accent)) right bottom / 2px 14px no-repeat;
+    opacity: 0.35;
+    animation: cpu-focus-frame 1.8s ease-in-out infinite;
+  }
+  .cpu-face[data-emotion="focused"] .cpu-brow:first-child { transform: translateY(-1px) rotate(-8deg); }
+  .cpu-face[data-emotion="focused"] .cpu-brow:last-child { transform: translateY(-1px) rotate(8deg); }
+  .cpu-face[data-emotion="focused"] .cpu-eye::after { animation: cpu-look-focused 1.8s infinite steps(1, end); }
   .cpu-face[data-emotion="focused"] .cpu-eye { transform: scale(1.02); }
   .cpu-face[data-emotion="focused"] .cpu-mouth { width: 20px; }
   .cpu-face[data-emotion="annoyed"] .cpu-brow:first-child,
-  .cpu-face[data-emotion="annoyed"] .cpu-brow:last-child { transform: translateY(-2px) rotate(0deg); }
+  .cpu-face[data-emotion="annoyed"] .cpu-brow:last-child { transform: translateY(-3px) rotate(0deg); }
+  .cpu-face[data-emotion="annoyed"]::before {
+    background:
+      linear-gradient(90deg, rgba(255, 90, 90, 0.26), rgba(255, 90, 90, 0)) left center / 22px 100% no-repeat,
+      linear-gradient(270deg, rgba(255, 90, 90, 0.26), rgba(255, 90, 90, 0)) right center / 22px 100% no-repeat;
+    opacity: 0.2;
+    animation: cpu-alert-edges 0.9s steps(2, end) infinite;
+  }
+  .cpu-face[data-emotion="annoyed"] .cpu-eyes {
+    transform: scaleY(0.78);
+  }
+  .cpu-face[data-emotion="annoyed"] .cpu-eye::after { animation: cpu-look-annoyed 0.9s infinite steps(1, end); }
   .cpu-face[data-emotion="annoyed"] .cpu-mouth { width: 18px; clip-path: polygon(8% 30%, 92% 30%, 100% 100%, 0 100%); }
+  .cpu-face[data-emotion="surprised"]::after {
+    border: 2px solid rgba(255,255,255,0.16);
+    border-radius: 50%;
+    inset: 18px;
+    opacity: 0;
+    animation: cpu-shock-ring 1s ease-out infinite;
+  }
+  .cpu-face[data-emotion="surprised"] .cpu-brows {
+    transform: translateY(-7px);
+  }
+  .cpu-face[data-emotion="surprised"] .cpu-brow:first-child {
+    transform: rotate(10deg);
+  }
+  .cpu-face[data-emotion="surprised"] .cpu-brow:last-child {
+    transform: rotate(-10deg);
+  }
+  .cpu-face[data-emotion="surprised"] .cpu-eye::after {
+    animation: none;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
   .cpu-face[data-emotion="surprised"] .cpu-mouth { width: 14px; height: 14px; border-radius: 50%; }
   .cpu-face[data-emotion="surprised"] .cpu-eye { transform: scale(1.14); }
 
   @keyframes cpuface-pulse {
     0%, 100% { transform: scale(1); filter: brightness(1); }
     50% { transform: scale(1.06); filter: brightness(1.25); }
+  }
+
+  @keyframes cpu-scan-sweep {
+    0% { transform: translateX(-90%); opacity: 0; }
+    15% { opacity: 0.24; }
+    50% { transform: translateX(0%); opacity: 0.6; }
+    85% { opacity: 0.24; }
+    100% { transform: translateX(90%); opacity: 0; }
+  }
+
+  @keyframes cpu-brows-think {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-2px); }
+  }
+
+  @keyframes cpu-focus-frame {
+    0%, 100% { opacity: 0.22; filter: brightness(1); }
+    50% { opacity: 0.52; filter: brightness(1.16); }
+  }
+
+  @keyframes cpu-glow-bloom {
+    0%, 100% { opacity: 0.2; transform: scale(0.92); }
+    50% { opacity: 0.7; transform: scale(1.08); }
+  }
+
+  @keyframes cpu-sheen-smug {
+    0%, 100% { transform: translateX(-30%); opacity: 0; }
+    30% { opacity: 0.26; }
+    55% { transform: translateX(26%); opacity: 0; }
+  }
+
+  @keyframes cpu-alert-edges {
+    0%, 100% { opacity: 0.14; }
+    50% { opacity: 0.5; }
+  }
+
+  @keyframes cpu-shock-ring {
+    0% { transform: scale(0.55); opacity: 0; }
+    15% { opacity: 0.65; }
+    100% { transform: scale(1.15); opacity: 0; }
+  }
+
+  @keyframes cpu-mouth-happy {
+    0%, 100% { transform: scaleX(1) translateY(0); }
+    50% { transform: scaleX(1.08) translateY(1px); }
   }
 
   @keyframes cpu-blink {
@@ -577,6 +904,33 @@
     21%, 45% { left: 5px; top: 3px; }
     46%, 70% { left: 3px; top: 1px; }
     71%, 100% { left: 3px; top: 4px; }
+  }
+
+  @keyframes cpu-look-thinking {
+    0%, 18% { left: 1px; top: 1px; }
+    19%, 38% { left: 5px; top: 1px; }
+    39%, 58% { left: 5px; top: 5px; }
+    59%, 78% { left: 1px; top: 5px; }
+    79%, 100% { left: 3px; top: 3px; }
+  }
+
+  @keyframes cpu-look-focused {
+    0%, 35% { left: 3px; top: 2px; }
+    36%, 60% { left: 4px; top: 2px; }
+    61%, 85% { left: 2px; top: 3px; }
+    86%, 100% { left: 3px; top: 2px; }
+  }
+
+  @keyframes cpu-look-smug {
+    0%, 55% { left: 5px; top: 3px; }
+    56%, 82% { left: 4px; top: 2px; }
+    83%, 100% { left: 5px; top: 3px; }
+  }
+
+  @keyframes cpu-look-annoyed {
+    0%, 30% { left: 2px; top: 3px; }
+    31%, 65% { left: 5px; top: 3px; }
+    66%, 100% { left: 3px; top: 2px; }
   }
 
   #board-wrap {
@@ -611,6 +965,35 @@
     overflow: hidden;
   }
 
+  #board::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 10px;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--board-effect-overlay-opacity);
+    background: var(--board-effect-overlay);
+    background-size: var(--board-effect-overlay-size);
+    animation: var(--board-effect-overlay-animation);
+    filter: var(--board-effect-overlay-filter);
+  }
+
+  #board::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 10px;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--board-effect-overlay-2-opacity);
+    background: var(--board-effect-overlay-2);
+    background-size: var(--board-effect-overlay-2-size);
+    animation: var(--board-effect-overlay-2-animation);
+    filter: var(--board-effect-overlay-2-filter);
+    mix-blend-mode: var(--board-effect-overlay-2-blend);
+  }
+
   .cell {
     position: relative;
     display: flex;
@@ -619,8 +1002,8 @@
     cursor: pointer;
   }
 
-  .cell.light { background: var(--board-light); }
-  .cell.dark { background: var(--board-dark); }
+  .cell.light { background: var(--board-effect-light-bg); }
+  .cell.dark { background: var(--board-effect-dark-bg); }
 
   .cell-file-label,
   .cell-rank-label {
@@ -646,53 +1029,12 @@
 
   .cell.light .cell-file-label,
   .cell.light .cell-rank-label {
-    color: rgba(88, 58, 24, 0.72);
+    color: var(--board-effect-label-light);
   }
 
   .cell.dark .cell-file-label,
   .cell.dark .cell-rank-label {
-    color: rgba(244, 229, 194, 0.82);
-  }
-
-  #board[data-theme="AURORA"] .cell.dark {
-    background:
-      linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)),
-      rgba(4, 8, 13, 0.82);
-  }
-
-  #board[data-theme="AURORA"]::before {
-    content: '';
-    position: absolute;
-    inset: 8px;
-    border-radius: 10px;
-    z-index: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 20% 24%, rgba(108, 255, 173, 0.7), rgba(108, 255, 173, 0) 48%),
-      radial-gradient(circle at 78% 20%, rgba(102, 156, 255, 0.66), rgba(102, 156, 255, 0) 44%),
-      radial-gradient(circle at 76% 76%, rgba(192, 108, 255, 0.64), rgba(192, 108, 255, 0) 46%),
-      radial-gradient(circle at 24% 78%, rgba(255, 118, 152, 0.5), rgba(255, 118, 152, 0) 42%),
-      linear-gradient(130deg, #08121e 4%, #0d2332 38%, #153249 64%, #112739 100%);
-    background-size: 220% 220%;
-    animation: aurora-board-drift 34s ease-in-out infinite alternate;
-    filter: saturate(1.06) brightness(1.03);
-  }
-
-  #board[data-theme="AURORA"] .cell.light {
-    background: rgba(240, 255, 255, 0.04);
-  }
-
-  #board[data-theme="AURORA"] .cell.light .cell-file-label,
-  #board[data-theme="AURORA"] .cell.light .cell-rank-label {
-    color: rgba(222, 246, 255, 0.9);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
-  }
-
-  #board[data-theme="AURORA"] .piece.black {
-    filter:
-      drop-shadow(0 0 0.9px rgba(222, 246, 255, 0.92))
-      drop-shadow(0 0 3px rgba(106, 184, 255, 0.52))
-      drop-shadow(0 2px 3px rgba(0, 0, 0, 0.72));
+    color: var(--board-effect-label-dark);
   }
 
   @keyframes aurora-board-drift {
@@ -710,8 +1052,128 @@
     }
   }
 
+  @keyframes glacier-board-shimmer {
+    0% {
+      background-position: 10% 18%, 86% 18%, 78% 82%, 18% 78%, 32% 50%;
+      filter: saturate(0.88) brightness(1.04);
+    }
+    50% {
+      background-position: 58% 22%, 34% 72%, 72% 30%, 24% 38%, 64% 50%;
+      filter: saturate(0.96) brightness(1.12);
+    }
+    100% {
+      background-position: 88% 74%, 18% 24%, 24% 18%, 82% 80%, 36% 50%;
+      filter: saturate(0.9) brightness(1.07);
+    }
+  }
+
+  @keyframes garden-board-bloom {
+    0%, 100% {
+      background-position: 14% 18%, 82% 18%, 78% 80%, 24% 80%, 34% 50%, 50% 50%;
+      filter: saturate(1.04) brightness(0.99) hue-rotate(-3deg);
+    }
+    50% {
+      background-position: 14% 18%, 82% 18%, 78% 80%, 24% 80%, 34% 50%, 50% 50%;
+      filter: saturate(1.12) brightness(1.04) hue-rotate(4deg);
+    }
+  }
+
+  @keyframes garden-board-bursts {
+    0% {
+      background-position: 16% 18%, 80% 20%, 82% 72%, 24% 78%, 42% 24%, 62% 58%;
+      opacity: 0;
+      filter: saturate(1) brightness(0.98) blur(0.44px);
+    }
+    10% {
+      background-position: 16% 18%, 80% 20%, 82% 72%, 24% 78%, 42% 24%, 62% 58%;
+      opacity: 0.86;
+      filter: saturate(1.28) brightness(1.08) blur(0.2px);
+    }
+    22% {
+      background-position: 16% 18%, 80% 20%, 82% 72%, 24% 78%, 42% 24%, 62% 58%;
+      opacity: 0;
+      filter: saturate(1.02) brightness(0.98) blur(0.42px);
+    }
+    23% {
+      background-position: 66% 22%, 30% 30%, 72% 74%, 38% 68%, 58% 24%, 46% 58%;
+      opacity: 0;
+      filter: saturate(1.02) brightness(0.98) blur(0.42px);
+    }
+    35% {
+      background-position: 66% 22%, 30% 30%, 72% 74%, 38% 68%, 58% 24%, 46% 58%;
+      opacity: 0.92;
+      filter: saturate(1.34) brightness(1.12) blur(0.16px);
+    }
+    48% {
+      background-position: 66% 22%, 30% 30%, 72% 74%, 38% 68%, 58% 24%, 46% 58%;
+      opacity: 0;
+      filter: saturate(1.04) brightness(0.98) blur(0.42px);
+    }
+    49% {
+      background-position: 26% 70%, 72% 30%, 20% 26%, 66% 78%, 46% 66%, 58% 42%;
+      opacity: 0;
+      filter: saturate(1.04) brightness(0.98) blur(0.42px);
+    }
+    62% {
+      background-position: 26% 70%, 72% 30%, 20% 26%, 66% 78%, 46% 66%, 58% 42%;
+      opacity: 0.84;
+      filter: saturate(1.26) brightness(1.08) blur(0.18px);
+    }
+    76% {
+      background-position: 26% 70%, 72% 30%, 20% 26%, 66% 78%, 46% 66%, 58% 42%;
+      opacity: 0;
+      filter: saturate(1.02) brightness(0.98) blur(0.42px);
+    }
+    77% {
+      background-position: 44% 18%, 76% 54%, 84% 28%, 24% 56%, 36% 80%, 60% 70%;
+      opacity: 0;
+      filter: saturate(1.02) brightness(0.98) blur(0.42px);
+    }
+    90% {
+      background-position: 44% 18%, 76% 54%, 84% 28%, 24% 56%, 36% 80%, 60% 70%;
+      opacity: 0.82;
+      filter: saturate(1.24) brightness(1.08) blur(0.18px);
+    }
+    100% {
+      background-position: 44% 18%, 76% 54%, 84% 28%, 24% 56%, 36% 80%, 60% 70%;
+      opacity: 0;
+      filter: saturate(1.02) brightness(0.98) blur(0.42px);
+    }
+  }
+
+  @keyframes lava-board-glow {
+    0% {
+      background-position: 8% 12%, 92% 18%, 84% 88%, 14% 84%, 30% 50%;
+      filter: saturate(1) brightness(0.92);
+    }
+    50% {
+      background-position: 18% 22%, 82% 10%, 90% 80%, 10% 90%, 64% 50%;
+      filter: saturate(1.18) brightness(1.04);
+    }
+    100% {
+      background-position: 12% 18%, 88% 16%, 82% 86%, 18% 82%, 38% 50%;
+      filter: saturate(1.06) brightness(0.98);
+    }
+  }
+
+  @keyframes deep-sea-board-sway {
+    0% {
+      background-position: 18% 24%, 76% 20%, 70% 80%, 28% 76%, 34% 50%;
+      filter: saturate(0.92) brightness(0.94);
+    }
+    50% {
+      background-position: 50% 28%, 40% 72%, 76% 40%, 22% 44%, 58% 50%;
+      filter: saturate(1.02) brightness(1);
+    }
+    100% {
+      background-position: 78% 70%, 22% 24%, 28% 24%, 76% 80%, 40% 50%;
+      filter: saturate(0.96) brightness(0.97);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    #board[data-theme="AURORA"]::before {
+    #board::before,
+    #board::after {
       animation: none;
     }
   }
@@ -785,7 +1247,7 @@
   }
 
   .piece.white { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.28)); }
-  .piece.black { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35)); }
+  .piece.black { filter: var(--board-piece-black-filter); }
 
   .piece.last-move {
     transform: translateY(-2px) scale(1.03);
@@ -1353,12 +1815,13 @@
       <option value="MASTER">CPU: HARD</option>
     </select>
     <select id="board-theme-btn" aria-label="Board theme" title="Board theme">
-      <option value="CLASSIC">BOARD: IVORY</option>
-      <option value="FOREST">BOARD: MOSS</option>
-      <option value="OCEAN">BOARD: TIDAL</option>
-      <option value="WALNUT">BOARD: AMBER</option>
-      <option value="SLATE">BOARD: SLATE</option>
       <option value="AURORA" selected>BOARD: AURORA</option>
+      <option value="NEBULA">BOARD: NEBULA</option>
+      <option value="SOLAR_WIND">BOARD: SOLAR WIND</option>
+      <option value="GLACIER">BOARD: GLACIER</option>
+      <option value="BLOOMING_GARDEN">BOARD: BLOOMING GARDEN</option>
+      <option value="VOLCANIC">BOARD: VOLCANIC</option>
+      <option value="DEEP_SEA">BOARD: DEEP SEA</option>
     </select>
     <button id="share-btn" title="Share challenge link">SHARE</button>
     <button id="sound-btn" title="Toggle sound">🔊</button>
@@ -1370,9 +1833,11 @@
     <div class="cpu-avatar">
       <div class="cpu-chat hidden" id="cpu-chat-left" data-tone="hype">CPU ONLINE</div>
       <div class="cpu-face hidden" id="cpu-face-left" data-emotion="idle" aria-hidden="true">
-        <div class="cpu-brows"><span class="cpu-brow"></span><span class="cpu-brow"></span></div>
-        <div class="cpu-eyes"><span class="cpu-eye"></span><span class="cpu-eye"></span></div>
-        <div class="cpu-mouth"></div>
+        <div class="cpu-core">
+          <div class="cpu-brows"><span class="cpu-brow"></span><span class="cpu-brow"></span></div>
+          <div class="cpu-eyes"><span class="cpu-eye"></span><span class="cpu-eye"></span></div>
+          <div class="cpu-mouth"></div>
+        </div>
       </div>
     </div>
     <div class="panel-label" id="label-left">BLACK</div>
@@ -1456,9 +1921,11 @@
     <div class="cpu-avatar">
       <div class="cpu-chat hidden" id="cpu-chat-right" data-tone="hype">CPU ONLINE</div>
       <div class="cpu-face hidden" id="cpu-face-right" data-emotion="idle" aria-hidden="true">
-        <div class="cpu-brows"><span class="cpu-brow"></span><span class="cpu-brow"></span></div>
-        <div class="cpu-eyes"><span class="cpu-eye"></span><span class="cpu-eye"></span></div>
-        <div class="cpu-mouth"></div>
+        <div class="cpu-core">
+          <div class="cpu-brows"><span class="cpu-brow"></span><span class="cpu-brow"></span></div>
+          <div class="cpu-eyes"><span class="cpu-eye"></span><span class="cpu-eye"></span></div>
+          <div class="cpu-mouth"></div>
+        </div>
       </div>
     </div>
     <div class="panel-label" id="label-right">WHITE</div>
@@ -1673,49 +2140,338 @@ const PIECE_SVGS = {
 };
 
 const PIECE_VALUE = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
-const BOARD_THEMES = {
-  CLASSIC: {
-    frameBg: '#132b49',
-    frameBorder: '#0b2340',
-    frameGlow: 'rgba(89, 145, 214, 0.30)',
-    light: '#ead9b7',
-    dark: '#9a6a3f'
-  },
-  FOREST: {
-    frameBg: '#1d3b32',
-    frameBorder: '#143028',
-    frameGlow: 'rgba(114, 182, 132, 0.28)',
-    light: '#d8e1c7',
-    dark: '#5b7b49'
-  },
-  OCEAN: {
-    frameBg: '#173651',
-    frameBorder: '#112e44',
-    frameGlow: 'rgba(99, 177, 216, 0.34)',
-    light: '#d9e8ee',
-    dark: '#4f7390'
-  },
-  WALNUT: {
-    frameBg: '#3a261d',
-    frameBorder: '#2b1a13',
-    frameGlow: 'rgba(184, 123, 79, 0.31)',
-    light: '#edd9c4',
-    dark: '#875638'
-  },
-  SLATE: {
-    frameBg: '#2c3447',
-    frameBorder: '#1f2738',
-    frameGlow: 'rgba(151, 169, 205, 0.31)',
-    light: '#d7dde6',
-    dark: '#626f86'
-  },
-  AURORA: {
+const BOARD_PALETTES = {
+  POLAR_NIGHT: {
     frameBg: '#0f2438',
     frameBorder: '#0a1b2b',
     frameGlow: 'rgba(133, 224, 246, 0.4)',
     light: '#15273a',
-    dark: '#04070b'
+    dark: '#04070b',
+    labelLight: 'rgba(222, 246, 255, 0.9)',
+    labelDark: 'rgba(238, 247, 255, 0.82)',
+    fxLightSquare: 'rgba(240, 255, 255, 0.04)',
+    fxDarkSquare: 'linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), rgba(4, 8, 13, 0.82)',
+    fxLabelLight: 'rgba(222, 246, 255, 0.9)',
+    fxLabelDark: 'rgba(238, 247, 255, 0.82)',
+    fxPieceBlackFilter:
+      'drop-shadow(0 0 0.9px rgba(222, 246, 255, 0.92)) drop-shadow(0 0 3px rgba(106, 184, 255, 0.52)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.72))',
+    fxAccent1: 'rgba(108, 255, 173, 0.7)',
+    fxAccent2: 'rgba(102, 156, 255, 0.66)',
+    fxAccent3: 'rgba(192, 108, 255, 0.64)',
+    fxAccent4: 'rgba(255, 118, 152, 0.5)',
+    fxBase1: '#08121e',
+    fxBase2: '#0d2332',
+    fxBase3: '#153249',
+    fxBase4: '#112739',
+    fxOverlayFilter: 'saturate(1.06) brightness(1.03)'
+  },
+  DEEP_SPACE: {
+    frameBg: '#151a35',
+    frameBorder: '#0b1126',
+    frameGlow: 'rgba(147, 130, 255, 0.35)',
+    light: '#1f2346',
+    dark: '#090714',
+    labelLight: 'rgba(233, 227, 255, 0.92)',
+    labelDark: 'rgba(214, 204, 255, 0.84)',
+    fxLightSquare: 'rgba(236, 230, 255, 0.05)',
+    fxDarkSquare: 'linear-gradient(rgba(255, 255, 255, 0.022), rgba(255, 255, 255, 0.022)), rgba(7, 7, 18, 0.84)',
+    fxLabelLight: 'rgba(238, 230, 255, 0.92)',
+    fxLabelDark: 'rgba(218, 210, 255, 0.84)',
+    fxPieceBlackFilter:
+      'drop-shadow(0 0 1px rgba(228, 213, 255, 0.9)) drop-shadow(0 0 4px rgba(126, 123, 255, 0.52)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.76))',
+    fxAccent1: 'rgba(117, 155, 255, 0.72)',
+    fxAccent2: 'rgba(88, 234, 255, 0.54)',
+    fxAccent3: 'rgba(208, 97, 255, 0.68)',
+    fxAccent4: 'rgba(255, 139, 218, 0.48)',
+    fxBase1: '#090e1c',
+    fxBase2: '#131a37',
+    fxBase3: '#211f4d',
+    fxBase4: '#171536',
+    fxOverlayFilter: 'saturate(1.18) brightness(1.02)'
+  },
+  SOLAR_FLARE: {
+    frameBg: '#342114',
+    frameBorder: '#241208',
+    frameGlow: 'rgba(255, 173, 76, 0.34)',
+    light: '#3d2416',
+    dark: '#120905',
+    labelLight: 'rgba(255, 227, 188, 0.92)',
+    labelDark: 'rgba(255, 212, 156, 0.86)',
+    fxLightSquare: 'rgba(255, 234, 205, 0.045)',
+    fxDarkSquare: 'linear-gradient(rgba(255, 214, 153, 0.035), rgba(255, 214, 153, 0.015)), rgba(16, 9, 4, 0.86)',
+    fxLabelLight: 'rgba(255, 228, 196, 0.92)',
+    fxLabelDark: 'rgba(255, 214, 162, 0.86)',
+    fxPieceBlackFilter:
+      'drop-shadow(0 0 1px rgba(255, 222, 176, 0.86)) drop-shadow(0 0 4px rgba(255, 133, 51, 0.5)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.78))',
+    fxAccent1: 'rgba(255, 191, 87, 0.68)',
+    fxAccent2: 'rgba(255, 120, 48, 0.64)',
+    fxAccent3: 'rgba(255, 95, 61, 0.58)',
+    fxAccent4: 'rgba(255, 225, 138, 0.42)',
+    fxBase1: '#140b06',
+    fxBase2: '#2a160d',
+    fxBase3: '#47220f',
+    fxBase4: '#2d170d',
+    fxOverlayFilter: 'saturate(1.12) brightness(1.04)'
+  },
+  GLACIER_SILVER: {
+    frameBg: '#d7e6f0',
+    frameBorder: '#edf6ff',
+    frameGlow: 'rgba(206, 232, 255, 0.44)',
+    light: '#f1f8fd',
+    dark: '#8ea5bb',
+    labelLight: 'rgba(84, 116, 146, 0.78)',
+    labelDark: 'rgba(248, 252, 255, 0.88)',
+    fxLightSquare: 'linear-gradient(rgba(255, 255, 255, 0.66), rgba(224, 241, 255, 0.58)), rgba(230, 244, 252, 0.72)',
+    fxDarkSquare: 'linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)), rgba(116, 142, 168, 0.82)',
+    fxLabelLight: 'rgba(92, 124, 154, 0.82)',
+    fxLabelDark: 'rgba(250, 253, 255, 0.92)',
+    fxPieceBlackFilter:
+      'drop-shadow(0 0 1px rgba(255, 255, 255, 0.96)) drop-shadow(0 0 4px rgba(181, 222, 255, 0.58)) drop-shadow(0 2px 3px rgba(66, 92, 122, 0.36))',
+    fxAccent1: 'rgba(255, 255, 255, 0.74)',
+    fxAccent2: 'rgba(212, 240, 255, 0.68)',
+    fxAccent3: 'rgba(192, 225, 255, 0.56)',
+    fxAccent4: 'rgba(233, 246, 255, 0.52)',
+    fxBase1: '#edf7ff',
+    fxBase2: '#d7ebf8',
+    fxBase3: '#bfd8ea',
+    fxBase4: '#ddeef8',
+    fxOverlayFilter: 'saturate(0.92) brightness(1.08)'
+  },
+  GARDEN_NOCTURNE: {
+    frameBg: '#1e5f5a',
+    frameBorder: '#d9fff0',
+    frameGlow: 'rgba(189, 255, 227, 0.36)',
+    light: '#c8fff1',
+    dark: '#0f5855',
+    labelLight: 'rgba(44, 112, 103, 0.8)',
+    labelDark: 'rgba(243, 255, 250, 0.9)',
+    fxLightSquare: 'linear-gradient(rgba(255, 255, 255, 0.54), rgba(224, 255, 244, 0.44)), rgba(205, 255, 242, 0.74)',
+    fxDarkSquare: 'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)), rgba(16, 95, 90, 0.82)',
+    fxLabelLight: 'rgba(48, 117, 108, 0.82)',
+    fxLabelDark: 'rgba(244, 255, 250, 0.92)',
+    fxPieceBlackFilter:
+      'drop-shadow(0 0 1px rgba(241, 255, 251, 0.92)) drop-shadow(0 0 5px rgba(135, 241, 211, 0.42)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.68))',
+    fxAccent1: 'rgba(255, 133, 193, 0.38)',
+    fxAccent2: 'rgba(255, 226, 116, 0.34)',
+    fxAccent3: 'rgba(161, 142, 255, 0.3)',
+    fxAccent4: 'rgba(134, 255, 218, 0.34)',
+    fxBase1: '#8ff7d4',
+    fxBase2: '#63d8c8',
+    fxBase3: '#4caab0',
+    fxBase4: '#7be7d5',
+    fxOverlayFilter: 'saturate(1.12) brightness(1.04)'
+  },
+  VOLCANIC_OBSIDIAN: {
+    frameBg: '#161010',
+    frameBorder: '#2f3539',
+    frameGlow: 'rgba(255, 111, 68, 0.24)',
+    light: '#211716',
+    dark: '#090606',
+    labelLight: 'rgba(255, 212, 198, 0.88)',
+    labelDark: 'rgba(255, 167, 140, 0.82)',
+    fxLightSquare: 'rgba(255, 221, 210, 0.032)',
+    fxDarkSquare: 'linear-gradient(rgba(255, 133, 92, 0.055), rgba(255, 74, 43, 0.018)), rgba(7, 4, 4, 0.9)',
+    fxLabelLight: 'rgba(255, 214, 198, 0.88)',
+    fxLabelDark: 'rgba(255, 170, 140, 0.82)',
+    fxPieceBlackFilter:
+      'drop-shadow(0 0 1px rgba(255, 199, 175, 0.78)) drop-shadow(0 0 4px rgba(255, 91, 46, 0.52)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.82))',
+    fxAccent1: 'rgba(255, 103, 52, 0.58)',
+    fxAccent2: 'rgba(255, 145, 61, 0.5)',
+    fxAccent3: 'rgba(206, 43, 24, 0.52)',
+    fxAccent4: 'rgba(255, 188, 92, 0.22)',
+    fxBase1: '#060404',
+    fxBase2: '#120909',
+    fxBase3: '#22100c',
+    fxBase4: '#0d0707',
+    fxOverlayFilter: 'saturate(1.1) brightness(0.98)'
+  },
+  ABYSSAL_BLOOM: {
+    frameBg: '#071c2a',
+    frameBorder: '#134255',
+    frameGlow: 'rgba(69, 183, 195, 0.3)',
+    light: '#0d2a39',
+    dark: '#031019',
+    labelLight: 'rgba(203, 248, 255, 0.88)',
+    labelDark: 'rgba(168, 228, 236, 0.82)',
+    fxLightSquare: 'rgba(226, 255, 255, 0.04)',
+    fxDarkSquare: 'linear-gradient(rgba(114, 238, 228, 0.028), rgba(114, 238, 228, 0.01)), rgba(2, 14, 22, 0.88)',
+    fxLabelLight: 'rgba(206, 248, 255, 0.9)',
+    fxLabelDark: 'rgba(174, 232, 239, 0.84)',
+    fxPieceBlackFilter:
+      'drop-shadow(0 0 1px rgba(198, 249, 255, 0.82)) drop-shadow(0 0 4px rgba(71, 214, 205, 0.4)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.8))',
+    fxAccent1: 'rgba(61, 233, 210, 0.46)',
+    fxAccent2: 'rgba(102, 207, 255, 0.3)',
+    fxAccent3: 'rgba(86, 255, 232, 0.4)',
+    fxAccent4: 'rgba(170, 255, 247, 0.16)',
+    fxBase1: '#03101a',
+    fxBase2: '#062032',
+    fxBase3: '#0d2f42',
+    fxBase4: '#082131',
+    fxOverlayFilter: 'saturate(0.96) brightness(0.98)'
   }
+};
+const BOARD_EFFECTS = {
+  NONE: {
+    dataEffect: 'NONE',
+    lightBg: 'var(--board-light)',
+    darkBg: 'var(--board-dark)',
+    labelLight: 'var(--board-label-light)',
+    labelDark: 'var(--board-label-dark)',
+    overlay: 'none',
+    overlayOpacity: '0',
+    overlaySize: '100% 100%',
+    overlayFilter: 'none',
+    overlayAnimation: 'none',
+    overlay2: 'none',
+    overlay2Opacity: '0',
+    overlay2Size: '100% 100%',
+    overlay2Filter: 'none',
+    overlay2Animation: 'none',
+    overlay2Blend: 'normal',
+    blackPieceFilter: 'var(--board-piece-black-base-filter)'
+  },
+  ATMOSPHERIC_DRIFT: {
+    dataEffect: 'ATMOSPHERIC_DRIFT',
+    lightBg: 'var(--board-fx-light-square)',
+    darkBg: 'var(--board-fx-dark-square)',
+    labelLight: 'var(--board-fx-label-light)',
+    labelDark: 'var(--board-fx-label-dark)',
+    overlay: [
+      'radial-gradient(circle at 20% 24%, var(--board-fx-accent-1), rgba(0, 0, 0, 0) 48%)',
+      'radial-gradient(circle at 78% 20%, var(--board-fx-accent-2), rgba(0, 0, 0, 0) 44%)',
+      'radial-gradient(circle at 76% 76%, var(--board-fx-accent-3), rgba(0, 0, 0, 0) 46%)',
+      'radial-gradient(circle at 24% 78%, var(--board-fx-accent-4), rgba(0, 0, 0, 0) 42%)',
+      'linear-gradient(130deg, var(--board-fx-base-1) 4%, var(--board-fx-base-2) 38%, var(--board-fx-base-3) 64%, var(--board-fx-base-4) 100%)'
+    ].join(', '),
+    overlayOpacity: '1',
+    overlaySize: '220% 220%',
+    overlayFilter: 'var(--board-fx-overlay-filter)',
+    overlayAnimation: 'aurora-board-drift var(--board-fx-drift-duration) ease-in-out infinite alternate',
+    overlay2: 'none',
+    overlay2Opacity: '0',
+    overlay2Size: '100% 100%',
+    overlay2Filter: 'none',
+    overlay2Animation: 'none',
+    overlay2Blend: 'normal',
+    blackPieceFilter: 'var(--board-fx-piece-black-filter)'
+  },
+  GLACIAL_SHIMMER: {
+    dataEffect: 'GLACIAL_SHIMMER',
+    lightBg: 'var(--board-fx-light-square)',
+    darkBg: 'var(--board-fx-dark-square)',
+    labelLight: 'var(--board-fx-label-light)',
+    labelDark: 'var(--board-fx-label-dark)',
+    overlay: [
+      'radial-gradient(circle at 18% 18%, var(--board-fx-accent-1), rgba(0, 0, 0, 0) 42%)',
+      'radial-gradient(circle at 82% 16%, var(--board-fx-accent-2), rgba(0, 0, 0, 0) 38%)',
+      'radial-gradient(circle at 80% 82%, var(--board-fx-accent-3), rgba(0, 0, 0, 0) 40%)',
+      'radial-gradient(circle at 20% 78%, var(--board-fx-accent-4), rgba(0, 0, 0, 0) 44%)',
+      'linear-gradient(145deg, var(--board-fx-base-1) 0%, var(--board-fx-base-2) 34%, var(--board-fx-base-3) 68%, var(--board-fx-base-4) 100%)'
+    ].join(', '),
+    overlayOpacity: '1',
+    overlaySize: '210% 210%',
+    overlayFilter: 'var(--board-fx-overlay-filter)',
+    overlayAnimation: 'glacier-board-shimmer 40s ease-in-out infinite alternate',
+    overlay2: 'none',
+    overlay2Opacity: '0',
+    overlay2Size: '100% 100%',
+    overlay2Filter: 'none',
+    overlay2Animation: 'none',
+    overlay2Blend: 'normal',
+    blackPieceFilter: 'var(--board-fx-piece-black-filter)'
+  },
+  GARDEN_MIST: {
+    dataEffect: 'GARDEN_MIST',
+    lightBg: 'var(--board-fx-light-square)',
+    darkBg: 'var(--board-fx-dark-square)',
+    labelLight: 'var(--board-fx-label-light)',
+    labelDark: 'var(--board-fx-label-dark)',
+    overlay: [
+      'radial-gradient(circle at 20% 26%, var(--board-fx-accent-1), rgba(0, 0, 0, 0) 34%)',
+      'radial-gradient(circle at 78% 20%, var(--board-fx-accent-2), rgba(0, 0, 0, 0) 30%)',
+      'radial-gradient(circle at 76% 78%, var(--board-fx-accent-3), rgba(0, 0, 0, 0) 32%)',
+      'radial-gradient(circle at 24% 80%, var(--board-fx-accent-4), rgba(0, 0, 0, 0) 34%)',
+      'conic-gradient(from 210deg at 50% 50%, rgba(255, 255, 255, 0.06), rgba(255, 155, 209, 0.1), rgba(255, 231, 136, 0.08), rgba(142, 255, 224, 0.08), rgba(166, 152, 255, 0.1), rgba(255, 255, 255, 0.06))',
+      'linear-gradient(135deg, var(--board-fx-base-1) 2%, var(--board-fx-base-2) 34%, var(--board-fx-base-3) 68%, var(--board-fx-base-4) 100%)'
+    ].join(', '),
+    overlayOpacity: '1',
+    overlaySize: '220% 220%',
+    overlayFilter: 'var(--board-fx-overlay-filter)',
+    overlayAnimation: 'garden-board-bloom 480s ease-in-out infinite alternate',
+    overlay2: [
+      'radial-gradient(circle at 14% 18%, rgba(255, 122, 190, 0.94) 0%, rgba(255, 122, 190, 0.58) 8%, rgba(255, 122, 190, 0) 18%)',
+      'radial-gradient(circle at 78% 16%, rgba(255, 233, 119, 0.92) 0%, rgba(255, 233, 119, 0.56) 8%, rgba(255, 233, 119, 0) 18%)',
+      'radial-gradient(circle at 84% 74%, rgba(152, 133, 255, 0.88) 0%, rgba(152, 133, 255, 0.5) 8%, rgba(152, 133, 255, 0) 18%)',
+      'radial-gradient(circle at 26% 80%, rgba(121, 255, 222, 0.9) 0%, rgba(121, 255, 222, 0.54) 8%, rgba(121, 255, 222, 0) 18%)',
+      'radial-gradient(circle at 46% 24%, rgba(255, 175, 210, 0.74) 0%, rgba(255, 175, 210, 0.34) 10%, rgba(255, 175, 210, 0) 22%)',
+      'radial-gradient(circle at 60% 58%, rgba(255, 248, 201, 0.72) 0%, rgba(255, 248, 201, 0.3) 10%, rgba(255, 248, 201, 0) 22%)'
+    ].join(', '),
+    overlay2Opacity: '0.68',
+    overlay2Size: '165% 165%',
+    overlay2Filter: 'saturate(1.18) brightness(1.04) blur(0.3px)',
+    overlay2Animation: 'garden-board-bursts 240s ease-in-out infinite',
+    overlay2Blend: 'screen',
+    blackPieceFilter: 'var(--board-fx-piece-black-filter)'
+  },
+  LAVA_GLOW: {
+    dataEffect: 'LAVA_GLOW',
+    lightBg: 'var(--board-fx-light-square)',
+    darkBg: 'var(--board-fx-dark-square)',
+    labelLight: 'var(--board-fx-label-light)',
+    labelDark: 'var(--board-fx-label-dark)',
+    overlay: [
+      'radial-gradient(circle at 10% 12%, var(--board-fx-accent-1), rgba(0, 0, 0, 0) 34%)',
+      'radial-gradient(circle at 90% 18%, var(--board-fx-accent-2), rgba(0, 0, 0, 0) 34%)',
+      'radial-gradient(circle at 84% 88%, var(--board-fx-accent-3), rgba(0, 0, 0, 0) 32%)',
+      'radial-gradient(circle at 16% 84%, var(--board-fx-accent-4), rgba(0, 0, 0, 0) 28%)',
+      'linear-gradient(145deg, var(--board-fx-base-1) 4%, var(--board-fx-base-2) 34%, var(--board-fx-base-3) 70%, var(--board-fx-base-4) 100%)'
+    ].join(', '),
+    overlayOpacity: '1',
+    overlaySize: '190% 190%',
+    overlayFilter: 'var(--board-fx-overlay-filter)',
+    overlayAnimation: 'lava-board-glow 52s ease-in-out infinite alternate',
+    overlay2: 'none',
+    overlay2Opacity: '0',
+    overlay2Size: '100% 100%',
+    overlay2Filter: 'none',
+    overlay2Animation: 'none',
+    overlay2Blend: 'normal',
+    blackPieceFilter: 'var(--board-fx-piece-black-filter)'
+  },
+  TIDAL_BLOOM: {
+    dataEffect: 'TIDAL_BLOOM',
+    lightBg: 'var(--board-fx-light-square)',
+    darkBg: 'var(--board-fx-dark-square)',
+    labelLight: 'var(--board-fx-label-light)',
+    labelDark: 'var(--board-fx-label-dark)',
+    overlay: [
+      'radial-gradient(circle at 22% 26%, var(--board-fx-accent-1), rgba(0, 0, 0, 0) 42%)',
+      'radial-gradient(circle at 72% 24%, var(--board-fx-accent-2), rgba(0, 0, 0, 0) 40%)',
+      'radial-gradient(circle at 68% 78%, var(--board-fx-accent-3), rgba(0, 0, 0, 0) 40%)',
+      'radial-gradient(circle at 30% 74%, var(--board-fx-accent-4), rgba(0, 0, 0, 0) 34%)',
+      'linear-gradient(138deg, var(--board-fx-base-1) 4%, var(--board-fx-base-2) 36%, var(--board-fx-base-3) 66%, var(--board-fx-base-4) 100%)'
+    ].join(', '),
+    overlayOpacity: '0.96',
+    overlaySize: '215% 215%',
+    overlayFilter: 'var(--board-fx-overlay-filter)',
+    overlayAnimation: 'deep-sea-board-sway 48s ease-in-out infinite alternate',
+    overlay2: 'none',
+    overlay2Opacity: '0',
+    overlay2Size: '100% 100%',
+    overlay2Filter: 'none',
+    overlay2Animation: 'none',
+    overlay2Blend: 'normal',
+    blackPieceFilter: 'var(--board-fx-piece-black-filter)'
+  }
+};
+const BOARD_THEMES = {
+  AURORA: { palette: 'POLAR_NIGHT', effect: 'ATMOSPHERIC_DRIFT' },
+  NEBULA: { palette: 'DEEP_SPACE', effect: 'ATMOSPHERIC_DRIFT' },
+  SOLAR_WIND: { palette: 'SOLAR_FLARE', effect: 'ATMOSPHERIC_DRIFT' },
+  GLACIER: { palette: 'GLACIER_SILVER', effect: 'GLACIAL_SHIMMER' },
+  BLOOMING_GARDEN: { palette: 'GARDEN_NOCTURNE', effect: 'GARDEN_MIST' },
+  VOLCANIC: { palette: 'VOLCANIC_OBSIDIAN', effect: 'LAVA_GLOW' },
+  DEEP_SEA: { palette: 'ABYSSAL_BLOOM', effect: 'TIDAL_BLOOM' }
 };
 const CPU_TAUNT_START_MS = 7000;
 const CPU_TAUNT_STAGE_TWO_MS = 15000;
@@ -1748,6 +2504,56 @@ const CPU_PERSONA_LINES = {
   signature: ['I DO NOT BLUNDER. I CURATE CHAOS.', 'I PLAY FAST BECAUSE I ALREADY SAW THIS ENDING.', 'CALL IT CONFIDENCE. YOU CAN CALL IT TROUBLE.', 'I TURN PRESSURE INTO POINTS.', 'CALM HANDS. SHARP LINES.', 'I MAKE TACTICS LOOK INEVITABLE.', 'I DO NOT GUESS. I VERIFY.', 'I AM NOT LUCKY. I AM PREPARED.'],
   win: ['CHECKMATE. GOOD BATTLE.', 'WELL PLAYED.', 'ANALYSIS COMPLETE. I WON.', 'GG. THAT WAS CLEAN.', 'MATCH FILED UNDER: SUCCESS.'],
   lose: ['GG. YOU FOUND IT.', 'IMPROVED OPPONENT DETECTED.', 'NICE CONVERSION.', 'WELL EARNED.', 'YOU OUTPLAYED ME THAT ROUND.']
+};
+const CPU_PERSONA_OVERRIDES = {
+  ROOKIE: {
+    thinking: ['LOOKING FOR A GOOD MOVE...', 'LET ME THINK THIS THROUGH.', 'CHECKING A FEW IDEAS.', 'TRYING SOMETHING SIMPLE FIRST.', 'OKAY, ONE MOVE AT A TIME.'],
+    good: ['NICE MOVE.', 'THAT WAS GOOD.', 'OH, I LIKE THAT.', 'YOU FOUND A CLEAN IDEA.', 'WELL SPOTTED.'],
+    taunt: ['I THINK I SEE SOMETHING.', 'THIS POSITION IS GETTING INTERESTING.', 'ARE YOU SET ON THAT MOVE?', 'I MIGHT HAVE A TRICK HERE.', 'LET\'S SEE HOW THIS PLAYS OUT.'],
+    cocky: ['I FEEL PRETTY GOOD HERE.', 'I LIKE MY POSITION.', 'THAT MIGHT WORK OUT FOR ME.', 'I THINK I\'M ASKING SOME GOOD QUESTIONS.'],
+    opening: ['OPENING MODE.', 'LET\'S DEVELOP NICELY.', 'QUIET START. I LIKE IT.', 'CENTER FIRST.'],
+    middlegame: ['MIDDLEGAME TIME.', 'NOW THE PLANS START.', 'THINGS ARE GETTING SHARPER.', 'LOTS TO CALCULATE HERE.'],
+    endgame: ['ENDGAME TIME.', 'FEWER PIECES MAKES THIS CLEARER.', 'OKAY, NOW PRECISION MATTERS.', 'KING ACTIVITY TIME.'],
+    strong: ['GOOD FIND.', 'YOU SAW THAT WELL.', 'THAT WAS A STRONG MOVE.', 'NICE IDEA.'],
+    blunder: ['THAT LOOKS A LITTLE LOOSE.', 'I THINK SOMETHING WAS HANGING THERE.', 'I CAN TAKE ADVANTAGE OF THAT.', 'THAT MAY COST SOME MATERIAL.'],
+    checkGiven: ['CHECK.', 'CHECK. YOUR KING HAS TO RESPOND.', 'CHECK. LET\'S BE PRECISE.', 'CHECK.'],
+    checkTaken: ['NICE CHECK.', 'GOOD FORCING MOVE.', 'YEP, THAT CHECKS.', 'GOOD EYES.'],
+    capture: ['I\'LL TAKE THAT.', 'TRADE MADE.', 'PIECE COLLECTED.', 'OKAY, I\'M UPDATING THE BOARD.'],
+    promotion: ['THAT PAWN MADE IT.', 'NEW QUEEN TIME.', 'PROMOTION ACHIEVED.', 'THAT JUST GOT SERIOUS.'],
+    fork: ['I THINK THAT\'S A FORK.', 'TWO THREATS AT ONCE.', 'YOU MAY HAVE TO CHOOSE.', 'DOUBLE ATTACK HERE.'],
+    memoryPawn: ['ANOTHER PAWN MOVE?', 'YOU REALLY LIKE PAWN MOVES.', 'PAWNS AGAIN. NOTED.'],
+    memoryKnight: ['MORE KNIGHT MOVES?', 'YOU\'RE REALLY USING THAT KNIGHT.', 'KNIGHTS AGAIN. NICE STYLE.'],
+    slow1: ['TAKE YOUR TIME.', 'NO RUSH.', 'I CAN WAIT.', 'THINK IT THROUGH.'],
+    slow2: ['STILL THINKING? THAT\'S OKAY.', 'LOTS OF CHOICES HERE.', 'THIS ONE IS TRICKY.', 'I\'M STILL HERE.'],
+    slow3: ['BIG DECISION, HUH?', 'THIS TURN HAS SOME WEIGHT.', 'STILL SEARCHING?', 'I CAN WAIT A LITTLE LONGER.'],
+    signature: ['I\'M JUST TRYING TO FIND GOOD MOVES.', 'ONE CLEAN MOVE AT A TIME.', 'I LIKE SIMPLE CHESS.', 'LET\'S KEEP IT SOLID.'],
+    win: ['GOOD GAME.', 'NICE TRY.', 'THAT WAS FUN.', 'I GOT THIS ONE.'],
+    lose: ['NICELY PLAYED.', 'YOU GOT ME THAT TIME.', 'GOOD GAME.', 'THAT WAS STRONG.']
+  },
+  MASTER: {
+    thinking: ['CALCULATING CONCRETE LINES.', 'TESTING YOUR DEFENSE.', 'PRESSURE MAP UPDATING.', 'THIS POSITION REWARDS PRECISION.', 'I SEE THE CRITICAL SQUARES.'],
+    good: ['CORRECT.', 'YES, THAT WAS STRONG.', 'GOOD. YOU FOUND IT.', 'THAT WAS THE RIGHT IDEA.', 'A REAL MOVE.'],
+    taunt: ['YOU ARE RUNNING OUT OF EASY MOVES.', 'I SEE THE CRACKS ALREADY.', 'THIS POSITION IS STARTING TO TILT.', 'YOU FEEL THAT PRESSURE, RIGHT?', 'ONE INACCURACY IS ENOUGH HERE.'],
+    cocky: ['I ALREADY LIKE THE EVALUATION.', 'YOU ARE DEFENDING, NOT PLAYING.', 'THIS IS DRIFTING MY WAY.', 'THE POSITION IS ANSWERING FOR ME.', 'I DO NOT NEED MANY CHANCES.'],
+    opening: ['OPENING PREP ENGAGED.', 'DEVELOPMENT FIRST. PUNISHMENT SOON.', 'BOOK SHAPE. CLEAN STRUCTURE.', 'THE OPENING IS UNDER CONTROL.'],
+    middlegame: ['MIDDLEGAME. TACTICS ARE LIVE.', 'NOW THE POSITION STARTS CHARGING INTEREST.', 'THIS IS WHERE INACCURACY GETS TAXED.', 'COMPLICATIONS FAVOR THE CALCULATOR.'],
+    endgame: ['ENDGAME. NOW IT GETS TECHNICAL.', 'THIS ENDGAME SHOULD BE CONVERTIBLE.', 'FEWER PIECES. LESS MERCY.', 'PRECISION PHASE.'],
+    strong: ['YES. THAT HAD TEETH.', 'YOU FOUND THE ONLY REAL TRY.', 'STRONG MOVE. STILL NOT ENOUGH.', 'THAT WAS PRECISE.'],
+    blunder: ['THAT WAS LOSING.', 'YOU LEFT ME TOO MUCH.', 'I WILL CONVERT THAT.', 'THAT ERROR CHANGED THE EVALUATION.', 'MATERIAL DOES NOT RETURN ITSELF.'],
+    checkGiven: ['CHECK. SOLVE IT.', 'CHECK. BE EXACT.', 'YOUR KING IS UNDER DIRECT EXAMINATION.', 'CHECK. COUNT THE ESCAPES.'],
+    checkTaken: ['GOOD CHECK. NOW PROVE IT.', 'FORCING. I RESPECT THAT.', 'YES, THAT CHECK HAD A POINT.', 'CHECK RECEIVED. CONTINUE IF YOU CAN.'],
+    capture: ['MATERIAL CLAIMED.', 'I WILL TAKE THAT WITHOUT HESITATION.', 'EXCHANGE COMPLETE. MY TERMS.', 'THAT PIECE WAS AVAILABLE.'],
+    promotion: ['PROMOTION. THAT SHOULD END IT.', 'NEW QUEEN. NOW IT IS PROCEDURAL.', 'UPGRADE COMPLETE. CONVERSION TIME.', 'THE PAWN DID ITS JOB.'],
+    fork: ['FORK. DEFEND BOTH IF YOU CAN.', 'TWO THREATS. ONE MOVE.', 'YOUR POSITION JUST SPLIT.', 'PICK WHAT YOU WANT TO LOSE.'],
+    memoryPawn: ['PAWNS AGAIN. YOU ARE TELEGRAPHING.', 'ANOTHER PAWN PUSH. I NOTICED.', 'YOUR PAWN PLAN IS NO LONGER A SECRET.'],
+    memoryKnight: ['KNIGHTS AGAIN. PREDICTABLE.', 'ANOTHER KNIGHT HOP. LOGGED.', 'YOU KEEP RETURNING TO THAT KNIGHT.'],
+    slow1: ['TAKE YOUR TIME. THE POSITION WILL NOT IMPROVE FOR YOU.', 'I CAN WAIT. THE EVALUATION CANNOT.', 'THINK LONGER IF YOU NEED TO.'],
+    slow2: ['STILL SEARCHING FOR A DEFENSE?', 'THE MOVE IS THERE OR IT ISN\'T.', 'HESITATION USUALLY MEANS THE POSITION ALREADY SPOKE.'],
+    slow3: ['LONG THINK. SAME PROBLEM.', 'THE ANSWER DOES NOT GET BETTER WITH DELAY.', 'YOU CAN BURN TIME. I KEEP THE POSITION.'],
+    signature: ['I DO NOT PRESS. I CONSTRICT.', 'EVERY INACCURACY LEAVES A TRACE.', 'I PREFER POSITIONS THAT EXPLAIN THEMSELVES.', 'YOUR OPTIONS ARE GETTING THINNER.', 'I AM NOT CHASING THE WIN. I AM REMOVING THE ESCAPES.'],
+    win: ['CHECKMATE. CONVERSION COMPLETE.', 'GOOD RESISTANCE. NOT ENOUGH.', 'RESULT CONFIRMED.', 'THAT POSITION WAS ALWAYS TRENDING HERE.'],
+    lose: ['WELL PLAYED. YOU EARNED THAT.', 'CLEAN CONVERSION.', 'YOU FOUND THE RIGHT CONTINUATION.', 'STRONG GAME.']
+  }
 };
 
 const sessionByMode = { cpu: null, pass: null, link: null };
@@ -2574,16 +3380,53 @@ function loadPreferredBoardTheme() {
 }
 
 function applyBoardTheme(themeKey, persist = true) {
-  const key = BOARD_THEMES[themeKey] ? themeKey : 'CLASSIC';
+  const key = BOARD_THEMES[themeKey] ? themeKey : 'AURORA';
   const theme = BOARD_THEMES[key];
+  const palette = BOARD_PALETTES[theme.palette] || BOARD_PALETTES.POLAR_NIGHT;
+  const effect = BOARD_EFFECTS[theme.effect] || BOARD_EFFECTS.NONE;
   const boardEl = document.getElementById('board');
   const root = document.documentElement;
-  root.style.setProperty('--board-frame-bg', theme.frameBg);
-  root.style.setProperty('--board-frame-border', theme.frameBorder);
-  root.style.setProperty('--board-frame-glow', theme.frameGlow);
-  root.style.setProperty('--board-light', theme.light);
-  root.style.setProperty('--board-dark', theme.dark);
-  if (boardEl) boardEl.dataset.theme = key;
+  root.style.setProperty('--board-frame-bg', palette.frameBg);
+  root.style.setProperty('--board-frame-border', palette.frameBorder);
+  root.style.setProperty('--board-frame-glow', palette.frameGlow);
+  root.style.setProperty('--board-light', palette.light);
+  root.style.setProperty('--board-dark', palette.dark);
+  root.style.setProperty('--board-label-light', palette.labelLight || 'rgba(88, 58, 24, 0.72)');
+  root.style.setProperty('--board-label-dark', palette.labelDark || 'rgba(244, 229, 194, 0.82)');
+  root.style.setProperty('--board-fx-light-square', palette.fxLightSquare || palette.light);
+  root.style.setProperty('--board-fx-dark-square', palette.fxDarkSquare || palette.dark);
+  root.style.setProperty('--board-fx-label-light', palette.fxLabelLight || palette.labelLight || 'rgba(88, 58, 24, 0.72)');
+  root.style.setProperty('--board-fx-label-dark', palette.fxLabelDark || palette.labelDark || 'rgba(244, 229, 194, 0.82)');
+  root.style.setProperty('--board-fx-piece-black-filter', palette.fxPieceBlackFilter || 'var(--board-piece-black-base-filter)');
+  root.style.setProperty('--board-fx-accent-1', palette.fxAccent1 || 'rgba(0, 0, 0, 0)');
+  root.style.setProperty('--board-fx-accent-2', palette.fxAccent2 || 'rgba(0, 0, 0, 0)');
+  root.style.setProperty('--board-fx-accent-3', palette.fxAccent3 || 'rgba(0, 0, 0, 0)');
+  root.style.setProperty('--board-fx-accent-4', palette.fxAccent4 || 'rgba(0, 0, 0, 0)');
+  root.style.setProperty('--board-fx-base-1', palette.fxBase1 || palette.frameBg);
+  root.style.setProperty('--board-fx-base-2', palette.fxBase2 || palette.frameBg);
+  root.style.setProperty('--board-fx-base-3', palette.fxBase3 || palette.frameBg);
+  root.style.setProperty('--board-fx-base-4', palette.fxBase4 || palette.frameBg);
+  root.style.setProperty('--board-fx-overlay-filter', palette.fxOverlayFilter || 'none');
+  root.style.setProperty('--board-effect-light-bg', effect.lightBg);
+  root.style.setProperty('--board-effect-dark-bg', effect.darkBg);
+  root.style.setProperty('--board-effect-label-light', effect.labelLight);
+  root.style.setProperty('--board-effect-label-dark', effect.labelDark);
+  root.style.setProperty('--board-effect-overlay', effect.overlay);
+  root.style.setProperty('--board-effect-overlay-opacity', effect.overlayOpacity || '0');
+  root.style.setProperty('--board-effect-overlay-size', effect.overlaySize);
+  root.style.setProperty('--board-effect-overlay-filter', effect.overlayFilter);
+  root.style.setProperty('--board-effect-overlay-animation', effect.overlayAnimation);
+  root.style.setProperty('--board-effect-overlay-2', effect.overlay2 || 'none');
+  root.style.setProperty('--board-effect-overlay-2-opacity', effect.overlay2Opacity || '0');
+  root.style.setProperty('--board-effect-overlay-2-size', effect.overlay2Size || '100% 100%');
+  root.style.setProperty('--board-effect-overlay-2-filter', effect.overlay2Filter || 'none');
+  root.style.setProperty('--board-effect-overlay-2-animation', effect.overlay2Animation || 'none');
+  root.style.setProperty('--board-effect-overlay-2-blend', effect.overlay2Blend || 'normal');
+  root.style.setProperty('--board-piece-black-filter', effect.blackPieceFilter);
+  if (boardEl) {
+    boardEl.dataset.theme = key;
+    boardEl.dataset.effect = effect.dataEffect;
+  }
   const select = document.getElementById('board-theme-btn');
   if (select && select.value !== key) select.value = key;
   if (persist) {
@@ -2715,6 +3558,13 @@ function updateCpuPanelProminence() {
   rightPanel.classList.toggle('cpu-focus', cpuSide === WHITE);
 }
 
+function updateCpuDifficultyAppearance() {
+  const level = ['ROOKIE', 'PRO', 'MASTER'].includes(difficulty) ? difficulty : 'PRO';
+  document.querySelectorAll('.cpu-avatar').forEach((avatar) => {
+    avatar.dataset.difficulty = level;
+  });
+}
+
 function setCpuEmotion(emotion) {
   const faceId = getCpuSide() === WHITE ? 'cpu-face-right' : 'cpu-face-left';
   const face = document.getElementById(faceId);
@@ -2780,8 +3630,24 @@ function updateHumanPattern(movedType) {
   else cpuPlayerPattern.knightHopStreak = 0;
 }
 
+function getCpuDifficultyKey() {
+  return ['ROOKIE', 'PRO', 'MASTER'].includes(difficulty) ? difficulty : 'PRO';
+}
+
+function getCpuLinesForBucket(bucket) {
+  const level = getCpuDifficultyKey();
+  return CPU_PERSONA_OVERRIDES[level]?.[bucket] || CPU_PERSONA_LINES[bucket];
+}
+
+function getCpuSignatureChance() {
+  const level = getCpuDifficultyKey();
+  if (level === 'ROOKIE') return 0.03;
+  if (level === 'MASTER') return 0.16;
+  return CPU_SIGNATURE_CHANCE;
+}
+
 function cpuPickLine(bucket) {
-  const lines = CPU_PERSONA_LINES[bucket];
+  const lines = getCpuLinesForBucket(bucket);
   if (!lines || !lines.length) return null;
   let pickFrom = lines;
   let usedSignature = false;
@@ -2789,8 +3655,8 @@ function cpuPickLine(bucket) {
     'taunt', 'cocky', 'blunder', 'strong', 'checkGiven', 'checkTaken', 'capture', 'fork', 'slow2', 'slow3'
   ]);
 
-  if (signatureEligible.has(bucket) && cpuSignatureCooldown <= 0 && Math.random() < CPU_SIGNATURE_CHANCE) {
-    pickFrom = CPU_PERSONA_LINES.signature;
+  if (signatureEligible.has(bucket) && cpuSignatureCooldown <= 0 && Math.random() < getCpuSignatureChance()) {
+    pickFrom = getCpuLinesForBucket('signature') || CPU_PERSONA_LINES.signature;
     usedSignature = true;
   }
 
@@ -3782,6 +4648,7 @@ function restoreSession(modeKey) {
   document.getElementById('difficulty-btn').value = difficulty;
   hideAllOverlays();
   setControlVisibility();
+  updateCpuDifficultyAppearance();
   setCpuFaceVisibility();
   setCpuChatVisibility();
   updateScore();
@@ -4338,6 +5205,7 @@ document.getElementById('cpu-side-black').addEventListener('click', () => {
 
 document.getElementById('difficulty-btn').addEventListener('change', (e) => {
   difficulty = e.target.value;
+  updateCpuDifficultyAppearance();
   persistCurrentModeSession();
   sfxClick();
 });
@@ -4431,6 +5299,7 @@ buildBoard();
 applyBoardTheme(loadPreferredBoardTheme(), false);
 loadPersistedSessions();
 selectedMode = loadPreferredMode();
+updateCpuDifficultyAppearance();
 updateModeMenuHighlight(selectedMode);
 renderActiveChallengesMenu();
 updateScore();
