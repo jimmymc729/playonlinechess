@@ -1219,6 +1219,92 @@
     }
   }
 
+  @keyframes rainbow-board-drift {
+    0% {
+      background-position: 24% 50%, 64% 44%, 12% 22%, 84% 18%, 52% 18%, 78% 78%, 18% 80%, 54% 82%, 36% 52%;
+      filter: saturate(1.26) brightness(1.02) hue-rotate(0deg);
+    }
+    25% {
+      background-position: 32% 48%, 58% 48%, 16% 20%, 78% 22%, 48% 16%, 80% 74%, 22% 76%, 58% 84%, 42% 50%;
+      filter: saturate(1.34) brightness(1.06) hue-rotate(4deg);
+    }
+    50% {
+      background-position: 42% 46%, 48% 54%, 22% 18%, 68% 28%, 42% 14%, 84% 68%, 28% 72%, 64% 86%, 50% 48%;
+      filter: saturate(1.42) brightness(1.1) hue-rotate(8deg);
+    }
+    75% {
+      background-position: 34% 52%, 56% 46%, 18% 26%, 80% 20%, 54% 22%, 74% 82%, 16% 72%, 50% 76%, 40% 54%;
+      filter: saturate(1.32) brightness(1.05) hue-rotate(3deg);
+    }
+    100% {
+      background-position: 24% 50%, 64% 44%, 12% 22%, 84% 18%, 52% 18%, 78% 78%, 18% 80%, 54% 82%, 36% 52%;
+      filter: saturate(1.26) brightness(1.02) hue-rotate(0deg);
+    }
+  }
+
+  @keyframes rainbow-board-sparkle {
+    0%, 100% {
+      background-position: 10% 18%, 30% 22%, 48% 18%, 72% 24%, 82% 62%, 58% 82%, 24% 78%;
+      opacity: 0;
+      filter: saturate(1.16) brightness(1.02) blur(0.36px);
+    }
+    12% {
+      background-position: 10% 18%, 30% 22%, 48% 18%, 72% 24%, 82% 62%, 58% 82%, 24% 78%;
+      opacity: 0.82;
+      filter: saturate(1.5) brightness(1.2) blur(0.12px);
+    }
+    20% {
+      background-position: 10% 18%, 30% 22%, 48% 18%, 72% 24%, 82% 62%, 58% 82%, 24% 78%;
+      opacity: 0;
+      filter: saturate(1.12) brightness(1) blur(0.36px);
+    }
+    21% {
+      background-position: 18% 74%, 42% 30%, 66% 18%, 84% 32%, 72% 74%, 48% 62%, 20% 52%;
+      opacity: 0;
+      filter: saturate(1.12) brightness(1) blur(0.36px);
+    }
+    36% {
+      background-position: 18% 74%, 42% 30%, 66% 18%, 84% 32%, 72% 74%, 48% 62%, 20% 52%;
+      opacity: 0.78;
+      filter: saturate(1.46) brightness(1.18) blur(0.12px);
+    }
+    44% {
+      background-position: 18% 74%, 42% 30%, 66% 18%, 84% 32%, 72% 74%, 48% 62%, 20% 52%;
+      opacity: 0;
+      filter: saturate(1.12) brightness(1) blur(0.36px);
+    }
+    45% {
+      background-position: 22% 26%, 40% 76%, 58% 24%, 76% 18%, 84% 52%, 62% 80%, 30% 84%;
+      opacity: 0;
+      filter: saturate(1.12) brightness(1) blur(0.36px);
+    }
+    62% {
+      background-position: 22% 26%, 40% 76%, 58% 24%, 76% 18%, 84% 52%, 62% 80%, 30% 84%;
+      opacity: 0.76;
+      filter: saturate(1.42) brightness(1.16) blur(0.14px);
+    }
+    70% {
+      background-position: 22% 26%, 40% 76%, 58% 24%, 76% 18%, 84% 52%, 62% 80%, 30% 84%;
+      opacity: 0;
+      filter: saturate(1.12) brightness(1) blur(0.36px);
+    }
+    71% {
+      background-position: 14% 42%, 34% 20%, 54% 78%, 78% 26%, 88% 72%, 60% 40%, 24% 68%;
+      opacity: 0;
+      filter: saturate(1.12) brightness(1) blur(0.36px);
+    }
+    88% {
+      background-position: 14% 42%, 34% 20%, 54% 78%, 78% 26%, 88% 72%, 60% 40%, 24% 68%;
+      opacity: 0.74;
+      filter: saturate(1.4) brightness(1.14) blur(0.14px);
+    }
+    96% {
+      background-position: 14% 42%, 34% 20%, 54% 78%, 78% 26%, 88% 72%, 60% 40%, 24% 68%;
+      opacity: 0;
+      filter: saturate(1.12) brightness(1) blur(0.36px);
+    }
+  }
+
   @keyframes deep-sea-board-sway {
     0% {
       background-position: 18% 24%, 76% 20%, 70% 80%, 28% 76%, 34% 50%;
@@ -1885,6 +1971,7 @@
       <option value="BLOOMING_GARDEN">BOARD: BLOOMING GARDEN</option>
       <option value="VOLCANIC">BOARD: VOLCANIC</option>
       <option value="DEEP_SEA">BOARD: DEEP SEA</option>
+      <option value="RAINBOW">BOARD: RAINBOW</option>
     </select>
     <button id="share-btn" title="Share challenge link">SHARE</button>
     <button id="sound-btn" title="Toggle sound">🔊</button>
@@ -2324,6 +2411,30 @@ const BOARD_PALETTES = {
     fxBase4: '#7be7d5',
     fxOverlayFilter: 'saturate(1.12) brightness(1.04)'
   },
+  RAINBOW_PRISM: {
+    frameBg: '#130e23',
+    frameBorder: '#5747a8',
+    frameGlow: 'rgba(171, 150, 255, 0.34)',
+    light: '#23193f',
+    dark: '#0b0718',
+    labelLight: 'rgba(246, 241, 255, 0.92)',
+    labelDark: 'rgba(224, 216, 255, 0.86)',
+    fxLightSquare: 'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)), rgba(34, 23, 58, 0.44)',
+    fxDarkSquare: 'linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01)), rgba(7, 4, 16, 0.72)',
+    fxLabelLight: 'rgba(246, 241, 255, 0.94)',
+    fxLabelDark: 'rgba(227, 219, 255, 0.86)',
+    fxPieceBlackFilter:
+      'drop-shadow(0 0 1px rgba(245, 241, 255, 0.94)) drop-shadow(0 0 6px rgba(137, 194, 255, 0.42)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.76))',
+    fxAccent1: 'rgba(255, 72, 92, 0.64)',
+    fxAccent2: 'rgba(255, 191, 56, 0.62)',
+    fxAccent3: 'rgba(86, 244, 141, 0.56)',
+    fxAccent4: 'rgba(72, 171, 255, 0.6)',
+    fxBase1: '#25124e',
+    fxBase2: '#3f1796',
+    fxBase3: '#1f2f8f',
+    fxBase4: '#120d28',
+    fxOverlayFilter: 'saturate(1.42) brightness(1.1)'
+  },
   VOLCANIC_OBSIDIAN: {
     frameBg: '#161010',
     frameBorder: '#2f3539',
@@ -2476,6 +2587,43 @@ const BOARD_EFFECTS = {
     overlay2Blend: 'screen',
     blackPieceFilter: 'var(--board-fx-piece-black-filter)'
   },
+  RAINBOW_WASH: {
+    dataEffect: 'RAINBOW_WASH',
+    lightBg: 'var(--board-fx-light-square)',
+    darkBg: 'var(--board-fx-dark-square)',
+    labelLight: 'var(--board-fx-label-light)',
+    labelDark: 'var(--board-fx-label-dark)',
+    overlay: [
+      'linear-gradient(92deg, rgba(255, 74, 74, 0.6) 0%, rgba(255, 132, 55, 0.58) 16%, rgba(255, 222, 90, 0.54) 32%, rgba(93, 247, 142, 0.5) 50%, rgba(88, 232, 255, 0.5) 66%, rgba(92, 140, 255, 0.56) 82%, rgba(186, 108, 255, 0.6) 100%)',
+      'linear-gradient(138deg, rgba(255, 108, 171, 0.16) 0%, rgba(255, 160, 72, 0.14) 18%, rgba(255, 241, 110, 0.12) 34%, rgba(112, 255, 177, 0.12) 52%, rgba(94, 200, 255, 0.14) 72%, rgba(170, 110, 255, 0.18) 100%)',
+      'radial-gradient(circle at 12% 22%, var(--board-fx-accent-1), rgba(0, 0, 0, 0) 28%)',
+      'radial-gradient(circle at 82% 18%, rgba(255, 140, 58, 0.56), rgba(0, 0, 0, 0) 26%)',
+      'radial-gradient(circle at 52% 20%, var(--board-fx-accent-2), rgba(0, 0, 0, 0) 24%)',
+      'radial-gradient(circle at 78% 78%, var(--board-fx-accent-3), rgba(0, 0, 0, 0) 28%)',
+      'radial-gradient(circle at 18% 78%, var(--board-fx-accent-4), rgba(0, 0, 0, 0) 28%)',
+      'radial-gradient(circle at 54% 82%, rgba(184, 108, 255, 0.56), rgba(0, 0, 0, 0) 26%)',
+      'linear-gradient(135deg, var(--board-fx-base-1) 0%, var(--board-fx-base-2) 24%, var(--board-fx-base-3) 56%, var(--board-fx-base-4) 100%)'
+    ].join(', '),
+    overlayOpacity: '1',
+    overlaySize: '180% 180%',
+    overlayFilter: 'var(--board-fx-overlay-filter)',
+    overlayAnimation: 'rainbow-board-drift 360s ease-in-out infinite',
+    overlay2: [
+      'radial-gradient(circle at 10% 18%, rgba(255, 84, 84, 0.94) 0%, rgba(255, 84, 84, 0.48) 7%, rgba(255, 84, 84, 0) 15%)',
+      'radial-gradient(circle at 30% 22%, rgba(255, 153, 63, 0.92) 0%, rgba(255, 153, 63, 0.48) 7%, rgba(255, 153, 63, 0) 15%)',
+      'radial-gradient(circle at 48% 18%, rgba(255, 234, 107, 0.92) 0%, rgba(255, 234, 107, 0.48) 7%, rgba(255, 234, 107, 0) 15%)',
+      'radial-gradient(circle at 72% 24%, rgba(109, 255, 166, 0.9) 0%, rgba(109, 255, 166, 0.46) 7%, rgba(109, 255, 166, 0) 15%)',
+      'radial-gradient(circle at 82% 62%, rgba(96, 228, 255, 0.9) 0%, rgba(96, 228, 255, 0.46) 7%, rgba(96, 228, 255, 0) 15%)',
+      'radial-gradient(circle at 58% 82%, rgba(90, 138, 255, 0.92) 0%, rgba(90, 138, 255, 0.46) 7%, rgba(90, 138, 255, 0) 15%)',
+      'radial-gradient(circle at 24% 78%, rgba(186, 110, 255, 0.94) 0%, rgba(186, 110, 255, 0.5) 7%, rgba(186, 110, 255, 0) 15%)'
+    ].join(', '),
+    overlay2Opacity: '0.74',
+    overlay2Size: '140% 140%',
+    overlay2Filter: 'saturate(1.4) brightness(1.14) blur(0.18px)',
+    overlay2Animation: 'rainbow-board-sparkle 320s ease-in-out infinite',
+    overlay2Blend: 'screen',
+    blackPieceFilter: 'var(--board-fx-piece-black-filter)'
+  },
   LAVA_GLOW: {
     dataEffect: 'LAVA_GLOW',
     lightBg: 'var(--board-fx-light-square)',
@@ -2534,7 +2682,8 @@ const BOARD_THEMES = {
   GLACIER: { palette: 'GLACIER_SILVER', effect: 'GLACIAL_SHIMMER' },
   BLOOMING_GARDEN: { palette: 'GARDEN_NOCTURNE', effect: 'GARDEN_MIST' },
   VOLCANIC: { palette: 'VOLCANIC_OBSIDIAN', effect: 'LAVA_GLOW' },
-  DEEP_SEA: { palette: 'ABYSSAL_BLOOM', effect: 'TIDAL_BLOOM' }
+  DEEP_SEA: { palette: 'ABYSSAL_BLOOM', effect: 'TIDAL_BLOOM' },
+  RAINBOW: { palette: 'RAINBOW_PRISM', effect: 'RAINBOW_WASH' }
 };
 const CPU_TAUNT_START_MS = 7000;
 const CPU_TAUNT_STAGE_TWO_MS = 15000;
