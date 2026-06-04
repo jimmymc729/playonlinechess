@@ -3577,6 +3577,7 @@ function newMatch() {
 }
 
 function returnToModeSelect() {
+  persistCurrentModeSession();
   clearCpuTauntTimers();
   hideAllOverlays('mode-select');
   readyState = { w: false, b: false };
@@ -3589,9 +3590,6 @@ function returnToModeSelect() {
   setCpuChatVisibility();
   selectedMode = loadPreferredMode();
   updateModeMenuHighlight(selectedMode);
-  clearSession('cpu');
-  clearSession('pass');
-  clearSession('link');
 }
 
 function showReadyOverlayForNextTurn() {
@@ -3790,9 +3788,22 @@ function restoreSession(modeKey) {
   renderBoard();
   requestAnimationFrame(sizeBoard);
 
-  if (!gameOver && onePlayer && turn !== humanSide) queueCpuMove(true);
-  else refreshCpuTauntLoop();
+  if (!gameOver && asyncMode) {
+    if (canLocalMoveInAsync()) showAsyncYourTurnPrompt();
+    else showAsyncWaitingPrompt();
+  } else if (!gameOver && onePlayer && turn !== humanSide) {
+    queueCpuMove(true);
+  } else {
+    refreshCpuTauntLoop();
+  }
   return true;
+}
+
+function switchMode(mode) {
+  persistCurrentModeSession();
+  if (restoreSession(mode)) return;
+  applyMode(mode, true);
+  if (mode === 'link') showAsyncYourTurnPrompt(true);
 }
 
 function savePreferredMode(mode) {
@@ -4294,18 +4305,17 @@ document.getElementById('ready-p2').addEventListener('click', () => {
 
 document.getElementById('mode-cpu').addEventListener('click', () => {
   sfxClick();
-  applyMode('cpu', true);
+  switchMode('cpu');
 });
 
 document.getElementById('mode-pass').addEventListener('click', () => {
   sfxClick();
-  applyMode('pass', true);
+  switchMode('pass');
 });
 
 document.getElementById('mode-link').addEventListener('click', () => {
   sfxClick();
-  applyMode('link', true);
-  showAsyncYourTurnPrompt(true);
+  switchMode('link');
 });
 
 document.getElementById('cpu-side-white').addEventListener('click', () => {
